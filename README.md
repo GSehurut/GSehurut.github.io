@@ -1,5 +1,5 @@
 # GSehurut.github.io
-### WEB PROGRAMMING LAB1
+## WEB PROGRAMMING LAB1
 
 The list of folders i have made
 - Blogs
@@ -9,6 +9,6 @@ The list of folders i have made
 - Pictures
 - Posts
 
-#### Languages used
+### Languages used
 1. HTML
 2. CSS
