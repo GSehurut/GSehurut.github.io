@@ -6,6 +6,8 @@ The list of folders i have made
 - layouts
 - about
 - css
+- Pictures
+- Posts
 
 #### Languages used
 1. HTML
