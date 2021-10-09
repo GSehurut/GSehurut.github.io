@@ -5,7 +5,7 @@ body {
 h1 {
   font-size: 3em;
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  color: rgb(3, 126, 89);
+  color: rgb(36, 3, 126);
 }
 p{
   font-size: 1.5em; 
@@ -28,13 +28,13 @@ nav ul li, footer ul li {
 }
 a{
   text-decoration: none; 
-  color: rgb(149,243,215);
+  color: rgb(155,108,243);
 } 
 a:hover {
   text-decoration: underline; 
 }
 ul.posts {
-  margin: 20px auto 40px; font-size: 1.5em;
+  margin: 20px auto 40px; font-size: 1.5em; background-color: rgb(4,153,153);
 }
 ul.posts li { 
   list-style: none;
