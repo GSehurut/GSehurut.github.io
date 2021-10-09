@@ -19,3 +19,8 @@ The list of folders i have made
 1. HTML
 2. CSS
 3. Markdown
+
+
+
+### Contributions
+Any help that can be offered to my work is highly appreciated, either in comments for improvement or otherwise.
