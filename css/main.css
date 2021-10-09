@@ -31,7 +31,7 @@ nav ul, footer ul {
 }
 nav ul li, footer ul li {
   display: inline;
-  margin-right: 50px; 
+  margin-right: 20px; 
 }
 a{
   text-decoration: none; 
@@ -42,12 +42,13 @@ a:hover {
   color: deeppink;
 }
 ul.posts {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   font-size: 1.5em;
-  background: #3399ff;
+  background: #7033ff;
   padding: 20px}
 
 ul.posts li { 
   list-style: none;
-  background: #cce5ff;
+  background: #dbccff;
   margin: 5px;
 }
