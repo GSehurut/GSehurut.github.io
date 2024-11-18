@@ -1,12 +1,24 @@
 ---
 layout: default
-title: Web Programming Page 
+title: Goabaone Sehurutshe Blogs
 ---
-    <h1>{{ page.title }}</h1>
-    <img src="/pictures/blog.jpg" width=100% height=300px>
-    <ul class="posts">
-      {% for post in site.posts %}
-      <li><span>{{ post.date | date_to_string }}</span> » <a href="{{ post.url }}" title="{{ post.title }}">{{
-      post.title }}</a></li> 
-      {% endfor %}
-    </ul>
+
+<h1>{{ page.title }}</h1>
+<p class="blog-description">
+  Welcome to my blog section where I share insights, tutorials, and experiences
+  from my journey in programming and tech.
+</p>
+<img src="/pictures/blog.jpg" width="100%" height="300px" alt="Blog Image" />
+
+<ul class="posts">
+  {% for post in site.posts %}
+  <li class="post-card">
+    <div class="post-meta">
+      <span class="post-date">{{ post.date | date_to_string }}</span>
+    </div>
+    <a href="{{ post.url }}" class="post-title" title="{{ post.title }}"
+      >{{ post.title }}</a
+    >
+  </li>
+  {% endfor %}
+</ul>
