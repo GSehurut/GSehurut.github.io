@@ -1,28 +1,37 @@
-<!DOCTYPE html> 
-<html>
-      <head>
-            <title>{{ page.title }}</title>
-            <!-- link to main stylesheet -->
-            <link rel="stylesheet" type="text/css" href="/css/main.css"> 
-      </head>
-      <body>
-            <nav>
-                  <ul>
-                      <li><a href="/">Home</a></li>
-                      <li><a href="/blog">Blog</a></li>
-                      <li><a href="/about">About</a></li>
-                  </ul>
-           </nav>
-           <div class="container">
-             
-            {{ content }}
-           </div> 
-           <footer>
-                  <ul>
-                  <li><a href="https://github.com/GSehurut">github.com/GSehurut</a></li>
-                  <li><a href="https://GSehurut.github.io">GSehurut.github.io</a></li>
-                  <li><a href="mailto:goabaonesehurutshe@gmail.com">Email Me</a></li>
-                  </ul> 
-            </footer>
-       </body> 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ page.title }}</title>
+    <!-- Link to the main external stylesheet -->
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  </head>
+  <body>
+    <!-- Header with Logo and Navigation Bar -->
+    <div class="header">
+      <div class="logo-container">
+        <h1 class="logo"><span>G</span>Sehurut</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="container">{{ content }}</div>
+
+    <!-- Footer Section -->
+    <footer>
+      <ul>
+        <li><a href="https://github.com/GSehurut">github.com/GSehurut</a></li>
+        <li><a href="https://GSehurut.github.io">GSehurut.github.io</a></li>
+        <li><a href="mailto:goabaonesehurutshe@gmail.com">Email Me</a></li>
+      </ul>
+    </footer>
+  </body>
 </html>

@@ -1,54 +1,118 @@
-body {
-  margin: 60px auto; 
-  width: 70%;
-} 
-h1 {
-  font-size: 3em;
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  color: rgb(36, 3, 126);
-}
-h2{
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; 
-    color: rgb(59, 36, 122);
-  }
-p{
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;  font-size: 1.5em; 
-  line-height: 1.4em; 
-  color: rgb(74, 78, 78);
-} 
-nav {
-  border-bottom: 1px solid #d5d5d5
-}
-footer {
-  border-top: 1px solid #d5d5d5;
-  font-size: .8em; 
-}
-nav ul, footer ul {
-  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif'; 
-  padding: 0px;
-  list-style: none;
+/* Style for the logo text */
+.logo {
+  font-family: 'Arial', sans-serif;
   font-weight: bold;
+  font-size: 36px;
+  color: #4CAF50; /* Custom green color */
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  display: inline-block;
 }
-nav ul li, footer ul li {
-  display: inline;
-  margin-right: 20px; 
-}
-a{
-  text-decoration: none; 
-  color: rgb(155,108,243);
-} 
-a:hover {
-  text-decoration: underline;
-  color: deeppink;
-}
-ul.posts {
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-  font-size: 1.5em;
-  background: #7033ff;
-  padding: 20px}
 
-ul.posts li { 
+.logo span {
+  color: #333; /* Dark color for accent */
+  font-size: 42px;
+}
+
+/* Add a subtle shadow effect to the logo */
+.logo {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+nav {
+  background-color: #333;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;  /* Ensure the nav bar stays in place */
+  z-index: 1; /* Make sure the nav bar is above other elements */
+}
+
+nav ul {
   list-style: none;
-  background: #dbccff;
-  margin: 5px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+nav ul li {
+  margin-right: 20px;
+}
+
+nav ul li a {
+  color: black; /* White text for visibility */
+  text-decoration: none;
+  font-size: 16px;
+  display: block;  /* Ensure the links take up full height and are clickable */
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #333; /* Dark color on hover */
+  background-color: #4CAF50; /* Green background on hover */
+  padding: 5px 10px; /* Add some padding on hover for emphasis */
+  border-radius: 5px; /* Rounded corners for the hover effect */
+}
+
+.container {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+footer ul li {
+  margin: 0 10px;
+}
+
+footer ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+footer ul li a:hover {
+  color: #4CAF50;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 36px;
+  color: #333;
+}
+
+.header nav {
+  background-color: transparent;
 }
