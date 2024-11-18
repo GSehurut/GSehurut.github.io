@@ -51,6 +51,36 @@ p {
   font-size: 42px;
 }
 
+/* Logo link styling */
+.logo {
+  text-decoration: none; /* Remove default underline */
+  position: relative; /* Set relative positioning to position the pseudo-element */
+}
+
+/* Add the animated underline effect using the ::after pseudo-element */
+.logo::after {
+  content: ''; /* Necessary to create the pseudo-element */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px; /* Thickness of the underline */
+  background-color: #6a4c9c; /* Light purple color */
+  transition: width 0.3s ease-in-out; /* Smooth animation on hover */
+}
+
+/* When hovered, animate the underline to full width */
+.logo:hover::after {
+  width: 100%; /* Underline expands to full width */
+}
+
+/* Optional: If you want the underline to have a smooth fade-in effect */
+.logo:hover {
+  color: #6a4c9c; /* Optional: change the text color on hover */
+}
+
+
+
 /* Navigation */
 nav {
   padding: 10px 20px;
