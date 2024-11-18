@@ -286,6 +286,48 @@ a.link:hover {
   color: var(--white);
 }
 
+
+/* Styling for Tea Image */
+.tea-img {
+  width: 100%; /* Makes the image responsive */
+  max-width: 600px; /* Maximum width of the image */
+  height: auto; /* Maintains the aspect ratio */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow effect */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effect */
+  margin-bottom: 20px; /* Space below the image */
+}
+
+.tea-img:hover {
+  transform: scale(1.05); /* Slight zoom effect on hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+}
+
+/* Styling for Okavango Image */
+.okavango-img {
+  width: 100%; /* Makes the image responsive */
+  max-width: 600px; /* Maximum width of the image */
+  height: auto; /* Maintains the aspect ratio */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow effect */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effect */
+  margin-bottom: 20px; /* Space below the image */
+}
+
+.okavango-img:hover {
+  transform: scale(1.05); /* Slight zoom effect on hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+}
+
+/* Media Query for Smaller Screens */
+@media screen and (max-width: 768px) {
+  .tea-img, .okavango-img {
+    max-width: 100%; /* Full width on smaller screens */
+  }
+}
+
+
+
 /* Media Queries */
 @media screen and (max-width: 768px) {
   .container {
