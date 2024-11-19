@@ -21,19 +21,25 @@ body {
   font-family: 'Arial', sans-serif;
   background-color: var(--accent-color);
   color: var(--dark-text);
+  line-height: 1.8;
+  padding: 20px;
 }
 
 h1, h2, h3, h4 {
   font-family: 'Arial', sans-serif;
   color: var(--dark-text);
+  margin-bottom: 20px;
+  line-height: 1.4;
 }
 
 p {
   font-family: 'Arial', sans-serif;
   color: var(--light-text);
   line-height: 1.6;
+  margin-bottom: 15px;
 }
 
+/* Logo Styles */
 /* Logo Styles */
 .logo {
   font-family: 'Arial', sans-serif;
@@ -44,17 +50,14 @@ p {
   letter-spacing: 3px;
   display: inline-block;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  text-decoration: none; /* Remove underline */
+  position: relative; /* For pseudo-element positioning */
 }
 
 .logo span {
   color: var(--secondary-color);
   font-size: 42px;
-}
-
-/* Logo link styling */
-.logo {
-  text-decoration: none; /* Remove default underline */
-  position: relative; /* Set relative positioning to position the pseudo-element */
 }
 
 /* Add the animated underline effect using the ::after pseudo-element */
@@ -80,7 +83,6 @@ p {
 }
 
 
-
 /* Navigation */
 nav {
   padding: 10px 20px;
@@ -104,19 +106,37 @@ nav ul li a {
   text-decoration: none;
   font-size: 16px;
   display: block;
-  transition: color 0.3s ease, background-color 0.3s ease;
+  position: relative; /* Required for pseudo-element positioning */
+  padding: 5px 10px; /* Padding for better click area */
+  border-radius: 5px; /* Smooth edges */
+  transition: color 0.3s ease; /* Smooth text color change */
 }
 
-nav ul li a:hover {
-  color: var(--accent-color);
-  background-color: var(--hover-bg);
-  padding: 5px 10px;
-  border-radius: 5px;
+/* Add animation using a pseudo-element */
+nav ul li a::after {
+  content: ''; /* Required to create the pseudo-element */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px; /* Thickness of the underline */
+  background-color: var(--hover-bg); /* Light Purple for the animation */
+  transition: width 0.3s ease-in-out; /* Smooth underline animation */
 }
+
+/* Hover effect: animate underline and change text color */
+nav ul li a:hover {
+  color: var(--primary-color); /* Change text color on hover */
+}
+
+nav ul li a:hover::after {
+  width: 100%; /* Expand the underline to full width */
+}
+
 
 /* Container */
 .container {
-  padding: 40px 20px;
+  padding: 40px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -125,18 +145,16 @@ nav ul li a:hover {
 footer {
   background-color: var(--footer-bg);
   color: var(--white);
-  padding: 20px 0;
+  padding: 30px 20px;
   text-align: center;
+  margin-top: 40px;
 }
 
 footer ul {
   list-style: none;
   display: flex;
   justify-content: center;
-}
-
-footer ul li {
-  margin: 0 10px;
+  gap: 20px;
 }
 
 footer ul li a {
@@ -154,9 +172,10 @@ footer ul li a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 20px;
+  padding: 20px 30px;
   background-color: var(--white);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
 }
 
 .header h1 {
@@ -167,23 +186,25 @@ footer ul li a:hover {
 /* About Section */
 .blurb {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 40px auto;
+  padding: 30px;
   background-color: var(--white);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .blurb h1 {
-  text-align: center;
-  color: var(--primary-color);
   font-size: 2.5em;
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .blurb h2 {
+  font-size: 1.8em;
   color: var(--secondary-color);
   margin-top: 30px;
-  font-size: 1.8em;
+  text-align: center;
 }
 
 /* Profile Section */
@@ -191,7 +212,8 @@ footer ul li a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+  gap: 20px;
 }
 
 .profile-img {
@@ -200,6 +222,7 @@ footer ul li a:hover {
   height: 200px;
   object-fit: cover;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  margin-right: 20px;
 }
 
 .profile-description {
@@ -208,27 +231,18 @@ footer ul li a:hover {
 
 .profile-description p {
   font-size: 1.1em;
+  margin-bottom: 15px;
 }
 
 /* Blog Section */
-h1 {
-  font-size: 2.5em;
-  color: var(--secondary-color);
-  margin-bottom: 20px;
-  text-align: center;
-}
-
 .blog-description {
-  font-size: 1.2em;
-  color: var(--light-text);
+  margin: 0 auto 30px auto;
   text-align: center;
-  margin-bottom: 30px;
   max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  font-size: 1.2em;
+  line-height: 1.5;
 }
 
-/* Post Card */
 ul.posts {
   list-style: none;
   display: grid;
@@ -262,71 +276,28 @@ ul.posts {
   color: var(--secondary-color);
   text-decoration: none;
   transition: color 0.3s ease;
+  margin-bottom: 10px;
 }
 
 .post-title:hover {
   color: var(--primary-color);
 }
 
-/* Link Styles */
-a.link {
-  display: inline-block;
-  margin-top: 10px;
-  font-size: 1.2em;
-  color: var(--primary-color);
-  text-decoration: none;
-  border: 2px solid var(--primary-color);
-  padding: 10px 20px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+/* Tea Image */
+.tea-img, .okavango-img {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px;
 }
 
-a.link:hover {
-  background-color: var(--primary-color);
-  color: var(--white);
+.tea-img:hover, .okavango-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
-
-
-/* Styling for Tea Image */
-.tea-img {
-  width: 100%; /* Makes the image responsive */
-  max-width: 600px; /* Maximum width of the image */
-  height: auto; /* Maintains the aspect ratio */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow effect */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effect */
-  margin-bottom: 20px; /* Space below the image */
-}
-
-.tea-img:hover {
-  transform: scale(1.05); /* Slight zoom effect on hover */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
-}
-
-/* Styling for Okavango Image */
-.okavango-img {
-  width: 100%; /* Makes the image responsive */
-  max-width: 600px; /* Maximum width of the image */
-  height: auto; /* Maintains the aspect ratio */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light shadow effect */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for hover effect */
-  margin-bottom: 20px; /* Space below the image */
-}
-
-.okavango-img:hover {
-  transform: scale(1.05); /* Slight zoom effect on hover */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
-}
-
-/* Media Query for Smaller Screens */
-@media screen and (max-width: 768px) {
-  .tea-img, .okavango-img {
-    max-width: 100%; /* Full width on smaller screens */
-  }
-}
-
-
 
 /* Media Queries */
 @media screen and (max-width: 768px) {
@@ -354,10 +325,5 @@ a.link:hover {
   nav ul {
     flex-direction: column;
     align-items: center;
-  }
-
-  nav ul li {
-    margin-right: 0;
-    margin-bottom: 10px;
   }
 }
