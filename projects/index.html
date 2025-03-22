@@ -1,0 +1,50 @@
+---
+layout: default
+title: Projects | Goabaone Sehurutshe
+description: A collection of my projects in actuarial analytics, data engineering, and risk modeling.
+---
+
+<div class="projects-section">
+  <h1>My Projects</h1>
+  <p class="projects-intro">
+    Explore my portfolio of projects in actuarial analytics, data engineering,
+    and risk modeling. Each project showcases different aspects of my technical
+    expertise and problem-solving abilities.
+  </p>
+
+  <div class="projects-grid">
+    {% for project in site.projects %}
+    <div class="project-card">
+      {% if project.image %}
+      <img
+        src="{{ project.image }}"
+        alt="{{ project.title }}"
+        class="project-image"
+      />
+      {% endif %}
+      <div class="project-content">
+        <h2>{{ project.title }}</h2>
+        <div class="project-meta">
+          <span class="project-date">{{ project.date | date: "%B %Y" }}</span>
+          {% if project.categories %}
+          <div class="project-categories">
+            {% for category in project.categories %}
+            <span class="category-tag">{{ category }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+        <p>{{ project.description }}</p>
+        <div class="project-tags">
+          {% for tag in project.tags %}
+          <span class="tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+        <a href="{{ project.url }}" class="project-link">
+          View Project <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>

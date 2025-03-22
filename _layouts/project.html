@@ -1,0 +1,44 @@
+---
+layout: default
+---
+
+<div class="project-container">
+  <header class="project-header">
+    <h1>{{ page.title }}</h1>
+    <div class="project-meta">
+      <span class="project-date">{{ page.date | date: "%B %d, %Y" }}</span>
+      {% if page.categories %}
+      <div class="project-categories">
+        {% for category in page.categories %}
+        <span class="category-tag">{{ category }}</span>
+        {% endfor %}
+      </div>
+      {% endif %} {% if page.tags %}
+      <div class="project-tags">
+        {% for tag in page.tags %}
+        <span class="tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="project-content">{{ content }}</div>
+
+  {% if page.related_projects %}
+  <div class="related-projects">
+    <h2>Related Projects</h2>
+    <div class="project-grid">
+      {% for project in page.related_projects %}
+      <div class="project-card">
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.description }}</p>
+        <a href="{{ project.url }}" class="project-link"
+          >View Project <i class="fas fa-arrow-right"></i
+        ></a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
