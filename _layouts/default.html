@@ -3,42 +3,64 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ page.title }}</title>
-    <link rel="stylesheet" href="/css/main.css" />
-    <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-    <!-- Google Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <!-- SEO Meta Tags -->
+    <title>{{ page.title }} | {{ site.title }}</title>
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="{{ page.title }} | {{ site.title }}" />
     <meta
       name="description"
-      content="Goabaone Sehurutshe - Actuarial Developer & Data Engineer specializing in London Specialty Market Analytics & Risk Modeling"
+      content="{{ page.description | default: site.description }}"
     />
     <meta
       name="keywords"
       content="actuarial, data engineering, London market, risk modeling, insurance analytics"
     />
-    <meta name="author" content="Goabaone Sehurutshe" />
-    <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title" content="{{ page.title }}" />
+    <meta name="author" content="{{ site.author.name }}" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ site.url }}{{ page.url }}" />
+    <meta property="og:title" content="{{ page.title }} | {{ site.title }}" />
     <meta
       property="og:description"
-      content="Goabaone Sehurutshe - Actuarial Developer & Data Engineer"
+      content="{{ page.description | default: site.description }}"
     />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://gsehurut.github.io" />
+    <meta property="og:image" content="{{ site.url }}/pictures/Goabaone.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="{{ site.url }}{{ page.url }}" />
+    <meta
+      property="twitter:title"
+      content="{{ page.title }} | {{ site.title }}"
+    />
+    <meta
+      property="twitter:description"
+      content="{{ page.description | default: site.description }}"
+    />
+    <meta
+      property="twitter:image"
+      content="{{ site.url }}/pictures/Goabaone.jpg"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/pictures/favicon.png" />
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <!-- Header with Logo and Navigation Bar -->
-    <div class="header">
+    <!-- Header -->
+    <header class="header">
       <div class="logo-container">
-        <!-- Logo wrapped in an anchor tag to make it clickable -->
         <a href="/" class="logo">
           <h1><span>G</span>Sehurut</h1>
         </a>
@@ -47,15 +69,56 @@
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/blog">Blog</a></li>
+          <li><a href="/projects">Projects</a></li>
           <li><a href="/about">About</a></li>
         </ul>
       </nav>
-    </div>
+    </header>
 
-    <!-- Main Content Section -->
-    <div class="container">{{ content }}</div>
+    <!-- Main Content -->
+    <main class="container">{{ content }}</main>
 
-    <!-- Footer Section -->
-    {% include footer.html %}
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p><i class="fas fa-envelope"></i> {{ site.author.email }}</p>
+          <p>
+            <i class="fas fa-map-marker-alt"></i> {{ site.author.location }}
+          </p>
+        </div>
+        <div class="footer-section">
+          <h3>Connect</h3>
+          <div class="social-links">
+            {% if site.author.social.linkedin %}
+            <a
+              href="https://linkedin.com/in/{{ site.author.social.linkedin }}"
+              target="_blank"
+              ><i class="fab fa-linkedin"></i
+            ></a>
+            {% endif %} {% if site.author.social.github %}
+            <a
+              href="https://github.com/{{ site.author.social.github }}"
+              target="_blank"
+              ><i class="fab fa-github"></i
+            ></a>
+            {% endif %} {% if site.author.social.twitter %}
+            <a
+              href="https://twitter.com/{{ site.author.social.twitter }}"
+              target="_blank"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          &copy; {{ site.time | date: '%Y' }} {{ site.author.name }}. All rights
+          reserved.
+        </p>
+      </div>
+    </footer>
   </body>
 </html>
