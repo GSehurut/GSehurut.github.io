@@ -1,13 +1,13 @@
 ---
 layout: post
-title: "Monte Carlo Simulation for Loss Modeling in Specialty Insurance"
+title: "Monte Carlo Simulation for Loss Modelling in Specialty Insurance"
 date: 2024-03-20
-categories: [Actuarial, Risk Modeling]
+categories: [Actuarial, Risk Modelling]
 tags: [Monte Carlo, Loss Simulation, Specialty Insurance, Python]
 image: /pictures/coding.jpg
 ---
 
-# Monte Carlo Simulation for Loss Modeling in Specialty Insurance
+# Monte Carlo Simulation for Loss Modelling in Specialty Insurance
 
 ## Introduction
 
