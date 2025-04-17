@@ -3,22 +3,55 @@ layout: default
 title: Goabaone Sehurutshe Blogs
 ---
 
-<h1>{{ page.title }}</h1>
-<p class="blog-description">
-  Welcome to my blog section where I share insights, tutorials, and experiences
-  from my journey in programming and tech.
-</p>
-<img src="/pictures/blog.jpg" width="100%" height="300px" alt="Blog Image" />
-
-<ul class="posts">
-  {% for post in site.posts %}
-  <li class="post-card">
-    <div class="post-meta">
-      <span class="post-date">{{ post.date | date_to_string }}</span>
+<div class="blog-container">
+  <section class="blog-hero">
+    <div class="blog-header">
+      <h1>{{ page.title }}</h1>
+      <p class="blog-description">
+        Welcome to my blog section where I share insights, tutorials, and
+        experiences from my journey in programming and tech.
+      </p>
     </div>
-    <a href="{{ post.url }}" class="post-title" title="{{ post.title }}"
-      >{{ post.title }}</a
-    >
-  </li>
-  {% endfor %}
-</ul>
+    <div class="blog-hero-image">
+      <img src="/pictures/blog.jpg" alt="Blog Image" />
+    </div>
+  </section>
+
+  <section class="blog-posts">
+    <div class="posts-grid">
+      {% for post in site.posts %}
+      <article class="post-card">
+        <div class="post-card-content">
+          <div class="post-meta">
+            <span class="post-date">
+              <i class="far fa-calendar-alt"></i>
+              {{ post.date | date_to_string }}
+            </span>
+            {% if post.categories %}
+            <div class="post-categories">
+              {% for category in post.categories %}
+              <span class="post-category">{{ category }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          <h2 class="post-title">
+            <a href="{{ post.url }}" title="{{ post.title }}"
+              >{{ post.title }}</a
+            >
+          </h2>
+          {% if post.excerpt %}
+          <p class="post-excerpt">
+            {{ post.excerpt | strip_html | truncatewords: 30 }}
+          </p>
+          {% endif %}
+          <a href="{{ post.url }}" class="read-more">
+            Read More
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+</div>
