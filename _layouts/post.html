@@ -1,9 +1,47 @@
 ---
 layout: default
 ---
-<h1>{{ page.title }}</h1>
-<p class="meta">{{ page.date | date_to_string }}</p>
 
-<div class="post"> 
-  {{ content }}
-</div>
+<article class="post-container">
+  <header class="post-header">
+    <div class="post-meta">
+      <span class="post-date">
+        <i class="far fa-calendar-alt"></i>
+        {{ page.date | date_to_string }}
+      </span>
+      {% if page.categories %}
+      <div class="post-categories">
+        {% for category in page.categories %}
+        <span class="post-category">{{ category }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <h1 class="post-title">{{ page.title }}</h1>
+    {% if page.tags %}
+    <div class="post-tags">
+      {% for tag in page.tags %}
+      <span class="post-tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </header>
+
+  <div class="post-content">{{ content }}</div>
+
+  <footer class="post-footer">
+    <div class="post-navigation">
+      {% if page.previous.url %}
+      <a href="{{page.previous.url}}" class="post-nav-link prev">
+        <i class="fas fa-arrow-left"></i>
+        {{page.previous.title}}
+      </a>
+      {% endif %} {% if page.next.url %}
+      <a href="{{page.next.url}}" class="post-nav-link next">
+        {{page.next.title}}
+        <i class="fas fa-arrow-right"></i>
+      </a>
+      {% endif %}
+    </div>
+  </footer>
+</article>
