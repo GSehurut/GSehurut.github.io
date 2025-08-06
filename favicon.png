@@ -1,0 +1,47 @@
+# Favicon PNG Reference
+
+This file serves as a reference for the favicon.png that should be created from the favicon.svg file.
+
+## Conversion Instructions
+
+To create the PNG favicon from the SVG:
+
+1. **Using Online Tools:**
+   - Go to https://convertio.co/svg-png/
+   - Upload the favicon.svg file
+   - Convert to PNG format
+   - Download the result as favicon.png
+
+2. **Using Command Line (if you have ImageMagick):**
+   ```bash
+   convert favicon.svg favicon.png
+   ```
+
+3. **Using Design Software:**
+   - Open favicon.svg in Adobe Illustrator, Figma, or similar
+   - Export as PNG at 32x32 pixels
+   - Save as favicon.png
+
+## Favicon Specifications
+
+- **Size:** 32x32 pixels (standard favicon size)
+- **Format:** PNG (for better browser compatibility)
+- **Design:** Circular gradient background with white "GS" initials
+- **Colors:** Blue gradient (#3182ce to #1e40af) matching website theme
+
+## Browser Support
+
+The favicon will work in:
+- ✅ Chrome, Firefox, Safari, Edge
+- ✅ Mobile browsers
+- ✅ Bookmark bars and tabs
+- ✅ Social media sharing
+
+## Implementation
+
+The favicon is already referenced in the HTML head section:
+```html
+<link rel="icon" type="image/png" href="/pictures/favicon.png" />
+```
+
+Make sure to place the favicon.png file in the pictures/ directory for it to work properly. 

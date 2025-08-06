@@ -17,9 +17,13 @@
     />
     <meta
       name="keywords"
-      content="actuarial, data engineering, London market, risk modeling, insurance analytics"
+      content="Goabaone Sehurutshe, actuarial, data engineering, London market, risk modeling, insurance analytics, portfolio analytics, actuarial science, Python, R, SQL, machine learning, data science"
     />
     <meta name="author" content="{{ site.author.name }}" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="distribution" content="global" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -30,6 +34,8 @@
       content="{{ page.description | default: site.description }}"
     />
     <meta property="og:image" content="{{ site.url }}/pictures/Goabaone.jpg" />
+    <meta property="og:site_name" content="{{ site.title }}" />
+    <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -47,8 +53,48 @@
       content="{{ site.url }}/pictures/Goabaone.jpg"
     />
 
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Goabaone Sehurutshe",
+        "jobTitle": "Portfolio Analytics Analyst",
+        "description": "Actuarial Developer & Data Engineer specializing in London Specialty Market Analytics & Risk Modeling",
+        "url": "https://gsehurut.github.io",
+        "image": "https://gsehurut.github.io/pictures/Goabaone.jpg",
+        "email": "goabaonesehurutshe@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "London",
+          "addressCountry": "GB"
+        },
+        "sameAs": [
+          "https://linkedin.com/in/goabaone-sehurutshe-572606127",
+          "https://github.com/GSehurut"
+        ],
+        "knowsAbout": [
+          "Actuarial Science",
+          "Data Engineering",
+          "Risk Modeling",
+          "Insurance Analytics",
+          "Portfolio Analytics",
+          "Machine Learning",
+          "Python",
+          "R",
+          "SQL"
+        ],
+        "worksFor": {
+          "@type": "Organization",
+          "name": "London Specialty Insurance Market"
+        }
+      }
+    </script>
+
     <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" href="/pictures/favicon.png" />
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}" />
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/css/main.css" />
