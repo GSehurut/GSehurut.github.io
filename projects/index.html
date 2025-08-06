@@ -13,38 +13,139 @@ description: A collection of my projects in actuarial analytics, data engineerin
   </p>
 
   <div class="projects-grid">
-    {% for project in site.projects %}
+    <!-- Comprehensive Risk Modeling Framework -->
     <div class="project-card">
-      {% if project.image %}
       <img
-        src="{{ project.image }}"
-        alt="{{ project.title }}"
+        src="/pictures/coding.jpg"
+        alt="Comprehensive Risk Modeling Framework"
         class="project-image"
       />
-      {% endif %}
       <div class="project-content">
-        <h2>{{ project.title }}</h2>
+        <h2>Comprehensive Risk Modeling Framework for London Market</h2>
         <div class="project-meta">
-          <span class="project-date">{{ project.date | date: "%B %Y" }}</span>
-          {% if project.categories %}
+          <span class="project-date">March 2024</span>
           <div class="project-categories">
-            {% for category in project.categories %}
-            <span class="category-tag">{{ category }}</span>
-            {% endfor %}
+            <span class="category-tag">Risk Modeling</span>
+            <span class="category-tag">Data Science</span>
+            <span class="category-tag">Insurance Analytics</span>
           </div>
-          {% endif %}
         </div>
-        <p>{{ project.description }}</p>
+        <p>
+          A comprehensive risk modeling framework for the London specialty
+          insurance market, incorporating advanced statistical methods, machine
+          learning, and real-time analytics.
+        </p>
         <div class="project-tags">
-          {% for tag in project.tags %}
-          <span class="tag">{{ tag }}</span>
-          {% endfor %}
+          <span class="tag">Python</span>
+          <span class="tag">R</span>
+          <span class="tag">Risk Modeling</span>
+          <span class="tag">Monte Carlo</span>
+          <span class="tag">Copulas</span>
+          <span class="tag">Machine Learning</span>
         </div>
-        <a href="{{ project.url }}" class="project-link">
+        <a
+          href="/projects/comprehensive-risk-modeling-framework"
+          class="project-link"
+        >
           View Project <i class="fas fa-arrow-right"></i>
         </a>
       </div>
     </div>
-    {% endfor %}
+
+    <!-- Portfolio Analytics Dashboard -->
+    <div class="project-card">
+      <img
+        src="/pictures/flowers.jpg"
+        alt="Portfolio Analytics Dashboard"
+        class="project-image"
+      />
+      <div class="project-content">
+        <h2>Portfolio Analytics Dashboard</h2>
+        <div class="project-meta">
+          <span class="project-date">March 2024</span>
+          <div class="project-categories">
+            <span class="category-tag">Data Visualization</span>
+            <span class="category-tag">Insurance Analytics</span>
+          </div>
+        </div>
+        <p>
+          An interactive dashboard for real-time portfolio performance analysis
+          in the London specialty insurance market, providing actionable
+          insights for portfolio managers and underwriters.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Streamlit</span>
+          <span class="tag">Data Engineering</span>
+        </div>
+        <a href="/projects/portfolio-dashboard" class="project-link">
+          View Project <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Exceedance Probability Curves -->
+    <div class="project-card">
+      <img
+        src="/pictures/flowers.jpg"
+        alt="Exceedance Probability Curves"
+        class="project-image"
+      />
+      <div class="project-content">
+        <h2>Exceedance Probability Curves for Catastrophe Risk</h2>
+        <div class="project-meta">
+          <span class="project-date">March 2024</span>
+          <div class="project-categories">
+            <span class="category-tag">Risk Modeling</span>
+            <span class="category-tag">Catastrophe</span>
+          </div>
+        </div>
+        <p>
+          Implementation of exceedance probability curves for catastrophe risk
+          assessment using Python and historical data.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Exceedance Probability</span>
+          <span class="tag">Catastrophe Modeling</span>
+          <span class="tag">Python</span>
+          <span class="tag">Risk Analytics</span>
+        </div>
+        <a href="/projects/exceedance-probability-curves" class="project-link">
+          View Project <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- London Market Risk Model -->
+    <div class="project-card">
+      <img
+        src="/pictures/coding.jpg"
+        alt="London Market Risk Model"
+        class="project-image"
+      />
+      <div class="project-content">
+        <h2>London Market Risk Model</h2>
+        <div class="project-meta">
+          <span class="project-date">March 2024</span>
+          <div class="project-categories">
+            <span class="category-tag">Risk Modeling</span>
+            <span class="category-tag">Data Science</span>
+          </div>
+        </div>
+        <p>
+          A comprehensive risk modeling framework for the London specialty
+          insurance market, combining traditional actuarial methods with modern
+          data science techniques.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">R</span>
+          <span class="tag">Insurance Analytics</span>
+        </div>
+        <a href="/projects/london-market-risk-model" class="project-link">
+          View Project <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
   </div>
 </div>
