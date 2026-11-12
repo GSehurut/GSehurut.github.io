@@ -17,7 +17,7 @@ description: Experience, education, qualifications and skills of Goabaone Sehuru
     <ol class="timeline">
       {% for job in cv.experience %}
       <li class="timeline__item">
-        <p class="timeline__date">{{ job.start }} – {{ job.end }}</p>
+        <p class="timeline__date">{{ job.start }} to {{ job.end }}</p>
         <div>
           <h3 class="timeline__role">{{ job.role }}</h3>
           <p class="timeline__org">{{ job.org }} · {{ job.location }}</p>
@@ -66,7 +66,7 @@ description: Experience, education, qualifications and skills of Goabaone Sehuru
     <ol class="timeline">
       {% for ed in cv.education %}
       <li class="timeline__item">
-        <p class="timeline__date">{{ ed.start }} – {{ ed.end }}</p>
+        <p class="timeline__date">{{ ed.start }} to {{ ed.end }}</p>
         <div>
           <h3 class="timeline__role">{{ ed.degree }}</h3>
           <p class="timeline__org">{{ ed.school }}</p>

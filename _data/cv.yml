@@ -6,7 +6,7 @@ employer: The Fidelis Partnership
 summary: >-
   I build the data products, pipelines and analytics tools that pricing,
   reserving and underwriting teams in the London specialty insurance market
-  rely on — combining actuarial science with modern software and data
+  rely on, combining actuarial science with modern software and data
   engineering.
 
 highlights:
@@ -22,7 +22,7 @@ expertise:
     title: Actuarial data products
     text: >-
       Trusted, tested datasets for pricing analytics, reserving and portfolio
-      management — with validation and reconciliation built in.
+      management, with validation and reconciliation built in.
   - icon: fa-diagram-project
     title: Data engineering
     text: >-
@@ -59,7 +59,7 @@ experience:
       - Built and automated end-to-end pipelines with Python, SQL, PySpark and Microsoft Fabric for pricing, reserving, exposure management and regulatory reporting.
       - Built and productionised a Realistic Disaster Scenario (RDS) pipeline and produced quarterly Political Risk exposure reports for senior management.
       - Created a Plotly dashboard monitoring credit events in structured credit deals from loan tape data, and Power BI exposure dashboards for Political Risk.
-      - Migrated pricing models, including Marine Cargo, to Hx Renew (Python, JavaScript) and owned Marine Cargo, Marine Construction, Space and AVN52 models — with code reviews and optimisation that materially cut execution time.
+      - Migrated pricing models, including Marine Cargo, to Hx Renew (Python, JavaScript) and owned Marine Cargo, Marine Construction, Space and AVN52 models, with code reviews and optimisation that materially cut execution time.
       - Designed an internal analytics API exposed through an Excel add-in, and a pricing adequacy framework for outward reinsurance deals.
     tags: [PySpark, Microsoft Fabric, Hx Renew, Power BI, Geospatial]
 
@@ -78,7 +78,7 @@ education:
     school: Heriot-Watt University
     start: 2021
     end: 2023
-    detail: "Dissertation: Investigating the Languages of Mathematics through the Lean Prover — 82% (A). Software engineering, databases, AI and web programming."
+    detail: "Dissertation: Investigating the Languages of Mathematics through the Lean Prover, 82% (A). Software engineering, databases, AI and web programming."
   - degree: BSc Actuarial Science
     school: The London School of Economics and Political Science
     start: 2018
