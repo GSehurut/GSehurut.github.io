@@ -918,7 +918,11 @@ code,
 pre {
   font-family: var(--font-mono);
 }
-:not(pre) > code {
+:not(pre) > code,
+:not(pre) > code[class*="language-"] {
+  color: var(--text);
+  white-space: normal;
+  text-shadow: none;
   padding: 0.1em 0.35em;
   font-size: 0.9em;
   background: var(--surface);
