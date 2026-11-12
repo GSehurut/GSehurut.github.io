@@ -7,8 +7,6 @@ tags: [Monte Carlo, Loss Simulation, Specialty Insurance, Python]
 image: /pictures/coding.jpg
 ---
 
-# Monte Carlo Simulation for Loss Modelling in Specialty Insurance
-
 ## Introduction
 
 Monte Carlo simulation is a powerful technique used in actuarial science to model complex risk scenarios, particularly in specialty insurance lines. This post explores how we can implement Monte Carlo simulation to model loss distributions and calculate key risk metrics.

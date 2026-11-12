@@ -4,6 +4,7 @@ title: "Portfolio Analytics Dashboard"
 date: 2024-03-15
 categories: [Data Visualization, Insurance Analytics]
 tags: [Python, Streamlit, Data Engineering]
+description: "An interactive dashboard for portfolio performance analysis in the London specialty market, giving portfolio managers and underwriters actionable insight."
 ---
 
 ## Project Overview

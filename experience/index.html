@@ -1,0 +1,92 @@
+---
+layout: default
+title: Experience
+description: Experience, education, qualifications and skills of Goabaone Sehurutshe, Actuarial Analytics Engineer in the London specialty insurance market.
+---
+{% assign cv = site.data.cv %}
+
+<div class="wrap page">
+  <header class="page__header">
+    <p class="eyebrow">CV</p>
+    <h1>Experience</h1>
+    <p class="lead">{{ cv.summary }}</p>
+  </header>
+
+  <section class="page__section" aria-labelledby="work">
+    <h2 id="work" class="section__title">Work</h2>
+    <ol class="timeline">
+      {% for job in cv.experience %}
+      <li class="timeline__item">
+        <p class="timeline__date">{{ job.start }} – {{ job.end }}</p>
+        <div>
+          <h3 class="timeline__role">{{ job.role }}</h3>
+          <p class="timeline__org">{{ job.org }} · {{ job.location }}</p>
+          <ul class="bullets">
+            {% for point in job.points %}<li>{{ point }}</li>{% endfor %}
+          </ul>
+          {% if job.tags %}
+          <ul class="chips" aria-label="Tools used">
+            {% for tag in job.tags %}<li class="chip">{{ tag }}</li>{% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="page__section" aria-labelledby="skills">
+    <h2 id="skills" class="section__title">Skills</h2>
+    <div class="grid grid--2">
+      {% for group in cv.skills %}
+      <div class="card">
+        <h3 class="card__title">{{ group.group }}</h3>
+        <ul class="chips">
+          {% for item in group.items %}<li class="chip">{{ item }}</li>{% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="page__section" aria-labelledby="qualifications">
+    <h2 id="qualifications" class="section__title">Qualifications</h2>
+    <ul class="grid grid--2 plain-list">
+      {% for q in cv.qualifications %}
+      <li class="card">
+        <h3 class="card__title">{{ q.name }}</h3>
+        <p>{{ q.detail }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="page__section" aria-labelledby="education">
+    <h2 id="education" class="section__title">Education</h2>
+    <ol class="timeline">
+      {% for ed in cv.education %}
+      <li class="timeline__item">
+        <p class="timeline__date">{{ ed.start }} – {{ ed.end }}</p>
+        <div>
+          <h3 class="timeline__role">{{ ed.degree }}</h3>
+          <p class="timeline__org">{{ ed.school }}</p>
+          <p>{{ ed.detail }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="page__section" aria-labelledby="leadership">
+    <h2 id="leadership" class="section__title">Leadership &amp; tutoring</h2>
+    <ul class="grid grid--3 plain-list">
+      {% for item in cv.leadership %}
+      <li class="card">
+        <h3 class="card__title">{{ item.role }}</h3>
+        <p class="card__meta">{{ item.org }}</p>
+        <p>{{ item.text }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>

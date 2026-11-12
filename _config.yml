@@ -1,14 +1,16 @@
 title: Goabaone Sehurutshe
-description: Actuarial Developer & Data Engineer specializing in London Specialty Market Analytics & Risk Modeling
+description: Actuarial Analytics Engineer building actuarial data products, pipelines and pricing analytics for the London specialty insurance market.
 baseurl: ""
 url: "https://gsehurut.github.io"
+lang: en_GB
 
 # Build settings
 markdown: kramdown
-theme: minima
+permalink: /blog/:year/:month/:day/:title/
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+  - jekyll-sitemap
 
 # Exclude from processing
 exclude:
@@ -16,9 +18,16 @@ exclude:
   - Gemfile.lock
   - node_modules
   - vendor
-  - .git/
-  - .github/
   - .vscode/
+  - README.md
+  - SEO-GUIDE.md
+  - gitignore
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /pictures/Goabaone.jpg
 
 # Site author information
 author:
@@ -28,4 +37,9 @@ author:
   social:
     linkedin: goabaone-sehurutshe-572606127
     github: GSehurut
-    twitter: ""
+
+social:
+  name: Goabaone Sehurutshe
+  links:
+    - https://www.linkedin.com/in/goabaone-sehurutshe-572606127
+    - https://github.com/GSehurut

@@ -1,143 +1,96 @@
 ---
 layout: default
-title: Home
-description: Portfolio Analytics Analyst | Actuarial
+title: Actuarial Analytics Engineer
+description: Goabaone Sehurutshe — Actuarial Analytics Engineer at The Fidelis Partnership, building actuarial data products, pipelines and pricing analytics for the London specialty insurance market.
 ---
+{% assign cv = site.data.cv %}
 
-<div class="hero-section">
-  <div class="hero-content">
-    <h1>Goabaone Sehurutshe</h1>
-    <h2>Portfolio Analytics Analyst | Actuarial</h2>
-    <p class="tagline">
-      Specialising in Data Engineering & Actuarial Analytics.
+<section class="hero">
+  <div class="wrap hero__inner">
+    <div class="hero__text">
+      <p class="eyebrow">{{ cv.headline }} · {{ cv.employer }}</p>
+      <h1 class="hero__title">Goabaone Sehurutshe</h1>
+      <p class="lead">{{ cv.summary }}</p>
+      <div class="button-row">
+        <a href="/experience/" class="button button--primary">View my experience</a>
+        <a href="/contact/" class="button button--secondary">Get in touch</a>
+      </div>
+    </div>
+    <img
+      class="hero__portrait"
+      src="/pictures/Goabaone.jpg"
+      alt="Portrait of Goabaone Sehurutshe"
+      width="320"
+      height="320"
+    />
+  </div>
+</section>
+
+<section class="section section--tint" aria-labelledby="what-i-do">
+  <div class="wrap">
+    <h2 id="what-i-do" class="section__title">What I do</h2>
+    <div class="grid grid--3">
+      {% for item in cv.expertise %}
+      <div class="card">
+        <span class="card__icon" aria-hidden="true"><i class="fas {{ item.icon }}"></i></span>
+        <h3 class="card__title">{{ item.title }}</h3>
+        <p>{{ item.text }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <dl class="stats">
+      {% for stat in cv.highlights %}
+      <div class="stat">
+        <dt class="stat__label">{{ stat.label }}</dt>
+        <dd class="stat__value">{{ stat.value }}</dd>
+      </div>
+      {% endfor %}
+    </dl>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="recent-roles">
+  <div class="wrap">
+    <div class="section__head">
+      <h2 id="recent-roles" class="section__title">Recent roles</h2>
+      <a href="/experience/" class="text-link">Full experience <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+    </div>
+    <ol class="timeline">
+      {% for job in cv.experience limit: 2 %}
+      <li class="timeline__item">
+        <p class="timeline__date">{{ job.start }} – {{ job.end }}</p>
+        <div>
+          <h3 class="timeline__role">{{ job.role }}</h3>
+          <p class="timeline__org">{{ job.org }} · {{ job.location }}</p>
+          <p>{{ job.points | first }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="section section--tint" aria-labelledby="latest-writing">
+  <div class="wrap">
+    <div class="section__head">
+      <h2 id="latest-writing" class="section__title">Latest writing</h2>
+      <a href="/blog/" class="text-link">All writing <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+    </div>
+    <div class="grid grid--3">
+      {% for post in site.posts limit: 3 %}
+      {% include post-card.html post=post %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="contact-cta">
+  <div class="wrap cta">
+    <h2 id="contact-cta" class="section__title">Let's talk</h2>
+    <p>
+      Happy to chat about actuarial analytics, data engineering in insurance,
+      or opportunities in the London market.
     </p>
-    <div class="hero-cta">
-      <a href="/projects" class="cta-button">View Projects</a>
-      <a href="/about" class="cta-button secondary">About Me</a>
-    </div>
-  </div>
-</div>
-
-<section class="expertise-section">
-  <h2>Core Expertise</h2>
-  <div class="expertise-grid">
-    <div class="expertise-card">
-      <i class="fas fa-chart-line"></i>
-      <h3>Actuarial Analytics</h3>
-      <p>
-        Advanced risk modeling and pricing for specialty lines in the London
-        market, leveraging cutting-edge statistical methods and machine learning
-        techniques.
-      </p>
-    </div>
-    <div class="expertise-card">
-      <i class="fas fa-database"></i>
-      <h3>Data Engineering</h3>
-      <p>
-        Building robust data pipelines and analytics platforms for insurance
-        data, ensuring data quality and accessibility for actuarial analysis.
-      </p>
-    </div>
-    <div class="expertise-card">
-      <i class="fas fa-balance-scale"></i>
-      <h3>Portfolio Analytics</h3>
-      <p>
-        Portfolio optimization and risk assessment for specialty insurance,
-        developing comprehensive risk management strategies.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section class="featured-projects">
-  <h2>Featured Projects</h2>
-  <div class="project-grid">
-    <div class="project-card">
-      <img
-        src="/pictures/coding.jpg"
-        alt="London Market Risk Model"
-        class="project-image"
-      />
-      <div class="project-content">
-        <h3>London Market Risk Model</h3>
-        <p>
-          Advanced risk modeling framework for specialty lines using Python and R,
-          incorporating machine learning for improved risk assessment.
-        </p>
-        <a href="/projects/london-market-risk-model" class="project-link">
-          View Project <i class="fas fa-arrow-right"></i>
-        </a>
-      </div>
-    </div>
-    <div class="project-card">
-      <img
-        src="/pictures/flowers.jpg"
-        alt="Portfolio Analytics Dashboard"
-        class="project-image"
-      />
-      <div class="project-content">
-        <h3>Portfolio Analytics Dashboard</h3>
-        <p>
-          Interactive dashboard for real-time portfolio performance analysis,
-          featuring advanced visualization and risk metrics.
-        </p>
-        <a href="/projects/portfolio-dashboard" class="project-link">
-          View Project <i class="fas fa-arrow-right"></i>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="latest-insights">
-  <h2>Latest Insights</h2>
-  <div class="blog-preview">
-    <div class="blog-card">
-      <img
-        src="/pictures/tea.jpg"
-        alt="London Market Trends"
-        class="blog-image"
-      />
-      <div class="blog-content">
-        <h3>Emerging Risks in the London Specialty Market</h3>
-        <p>
-          Analysis of current trends and future predictions in specialty
-          insurance, focusing on emerging risks and market opportunities.
-        </p>
-        <a href="/blog/london-market-trends" class="read-more">
-          Read More <i class="fas fa-arrow-right"></i>
-        </a>
-      </div>
-    </div>
-    <div class="blog-card">
-      <img
-        src="/pictures/blog.jpg"
-        alt="Data Engineering Best Practices"
-        class="blog-image"
-      />
-      <div class="blog-content">
-        <h3>Data Engineering Best Practices for Insurance</h3>
-        <p>
-          Building scalable data pipelines for actuarial analytics, ensuring data
-          quality and process efficiency.
-        </p>
-        <a href="/blog/data-engineering-insurance" class="read-more">
-          Read More <i class="fas fa-arrow-right"></i>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="cta-section">
-  <h2>Let's Connect</h2>
-  <p>
-    Interested in discussing actuarial analytics, data engineering, or the
-    London specialty market? Let's explore how we can work together.
-  </p>
-  <div class="cta-buttons">
-    <a href="/about" class="cta-button">About Me</a>
-    <a href="/projects" class="cta-button">View Projects</a>
-    <a href="/blog" class="cta-button">Read Blog</a>
+    <a href="/contact/" class="button button--primary">Get in touch</a>
   </div>
 </section>

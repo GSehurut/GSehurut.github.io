@@ -4,6 +4,7 @@ title: "London Market Risk Model"
 date: 2024-03-15
 categories: [Risk Modeling, Data Science]
 tags: [Python, R, Insurance Analytics]
+description: "A risk modelling framework for the London specialty insurance market, combining traditional actuarial methods with modern data science techniques."
 ---
 
 ## Project Overview
