@@ -1,0 +1,10 @@
+<article class="card card--link">
+  <p class="card__meta">
+    <time datetime="{{ include.post.date | date_to_xmlschema }}">{{ include.post.date | date: "%-d %b %Y" }}</time>
+    {% if include.post.categories.size > 0 %}· {{ include.post.categories | first }}{% endif %}
+  </p>
+  <h3 class="card__title">
+    <a href="{{ include.post.url }}" class="stretched-link">{{ include.post.title }}</a>
+  </h3>
+  <p>{{ include.post.description | default: include.post.excerpt | strip_html | truncatewords: 24 }}</p>
+</article>

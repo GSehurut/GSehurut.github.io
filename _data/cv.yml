@@ -1,0 +1,122 @@
+# Single source of truth for CV content shown on the site.
+# Update this file when the CV changes; the home and Experience pages read from it.
+
+headline: Actuarial Analytics Engineer
+employer: The Fidelis Partnership
+summary: >-
+  I build the data products, pipelines and analytics tools that pricing,
+  reserving and underwriting teams in the London specialty insurance market
+  rely on — combining actuarial science with modern software and data
+  engineering.
+
+highlights:
+  - value: "7"
+    label: IFoA exams passed
+  - value: "5"
+    label: Specialty lines supported
+  - value: "82%"
+    label: MSc dissertation (A)
+
+expertise:
+  - icon: fa-layer-group
+    title: Actuarial data products
+    text: >-
+      Trusted, tested datasets for pricing analytics, reserving and portfolio
+      management — with validation and reconciliation built in.
+  - icon: fa-diagram-project
+    title: Data engineering
+    text: >-
+      ETL pipelines in Python, SQL and PySpark on Microsoft Fabric, plus
+      FastAPI services that put analytics straight into underwriters' workflows.
+  - icon: fa-chart-line
+    title: Pricing & portfolio analytics
+    text: >-
+      Rate change monitoring, exposure management, pricing models on Hx Renew,
+      and Power BI / Plotly dashboards for underwriting and executive teams.
+
+experience:
+  - role: Actuarial Analytics Engineer
+    org: The Fidelis Partnership
+    location: London
+    start: Apr 2026
+    end: Present
+    points:
+      - Develop and maintain actuarial data products that provide trusted datasets for Pricing Analytics, Reserving and portfolio management teams.
+      - Design, build and optimise ETL pipelines in Python and SQL that automate actuarial and underwriting workflows.
+      - Develop and maintain internal FastAPI applications that deliver actuarial analytics and data services.
+      - Monitor and report rate change metrics across business lines, surfacing trends that inform portfolio decisions.
+      - Build Power BI and Plotly Dash reporting for underwriting, actuarial and executive stakeholders.
+      - Improve data quality through validation, reconciliation and automated testing; contribute to CI/CD and code review practices.
+    tags: [Python, SQL, FastAPI, Power BI, Plotly Dash, CI/CD]
+
+  - role: Portfolio Analytics Analyst
+    org: The Fidelis Partnership
+    location: London
+    start: Jan 2024
+    end: Apr 2026
+    points:
+      - Delivered analytics for pricing teams and underwriters across Marine, Aviation, Space, Political Risk and Structured Credit.
+      - Built and automated end-to-end pipelines with Python, SQL, PySpark and Microsoft Fabric for pricing, reserving, exposure management and regulatory reporting.
+      - Built and productionised a Realistic Disaster Scenario (RDS) pipeline and produced quarterly Political Risk exposure reports for senior management.
+      - Created a Plotly dashboard monitoring credit events in structured credit deals from loan tape data, and Power BI exposure dashboards for Political Risk.
+      - Migrated pricing models, including Marine Cargo, to Hx Renew (Python, JavaScript) and owned Marine Cargo, Marine Construction, Space and AVN52 models — with code reviews and optimisation that materially cut execution time.
+      - Designed an internal analytics API exposed through an Excel add-in, and a pricing adequacy framework for outward reinsurance deals.
+    tags: [PySpark, Microsoft Fabric, Hx Renew, Power BI, Geospatial]
+
+  - role: Actuarial Analyst Intern
+    org: Fidelis Insurance
+    location: London
+    start: Jul 2022
+    end: Sep 2022
+    points:
+      - Built a VBA matching system to resolve inconsistencies in how client names were recorded.
+      - Cleaned exposure data for marine, aviation and renewables to support accurate pricing of underwritten policies.
+    tags: [VBA, Excel, Data quality]
+
+education:
+  - degree: MSc Data Science
+    school: Heriot-Watt University
+    start: 2021
+    end: 2023
+    detail: "Dissertation: Investigating the Languages of Mathematics through the Lean Prover — 82% (A). Software engineering, databases, AI and web programming."
+  - degree: BSc Actuarial Science
+    school: The London School of Economics and Political Science
+    start: 2018
+    end: 2021
+    detail: "Upper Second-Class Honours (2:1). Actuarial mathematics, regression, Bayesian methods and statistical theory."
+  - degree: Cambridge International A Levels
+    school: Rainbow High School, Gaborone, Botswana
+    start: 2016
+    end: 2018
+    detail: "Accounting (A*), Business (A*), Mathematics (A), Economics (B)."
+
+qualifications:
+  - name: Institute and Faculty of Actuaries
+    detail: CS1, CS2, CM1, CB1, CB2, CB3, CP3
+  - name: Hyperexponential
+    detail: Hx Core Model Developer · Model Optimisation Specialist
+  - name: Microsoft Certified
+    detail: Azure Data Fundamentals (DP-900)
+  - name: Royal Statistical Society
+    detail: Graduate Statistician (GradStat)
+
+skills:
+  - group: Programming
+    items: [Python, SQL, JavaScript, VBA, Pandas, NumPy, FastAPI, SQLAlchemy, Pydantic, GeoPandas]
+  - group: Data engineering
+    items: [Microsoft Fabric, PySpark, SQL Server, ETL pipelines, CI/CD, Git]
+  - group: Analytics & visualisation
+    items: [Power BI, Plotly Dash, Jupyter, scikit-learn]
+  - group: Actuarial & insurance
+    items: [Pricing analytics, Reserving, Rate change monitoring, Exposure management, Portfolio analytics, Hx Renew]
+
+leadership:
+  - role: Events Officer
+    org: LSESU Actuarial Society
+    text: Organised career panels and socials, connecting members with industry professionals.
+  - role: Peer Tutor
+    org: LSE Department of Accounting
+    text: Supported first-year students in financial and management accounting.
+  - role: Tutor & Coach
+    org: Botswana
+    text: Coached a national-level school STEM quiz team and tutored GCSE Mathematics and Accounting.

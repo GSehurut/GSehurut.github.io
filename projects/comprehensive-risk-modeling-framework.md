@@ -8,8 +8,6 @@ image: /pictures/coding.jpg
 description: "A comprehensive risk modeling framework for the London specialty insurance market, incorporating advanced statistical methods, machine learning, and real-time analytics."
 ---
 
-# Comprehensive Risk Modeling Framework for London Market
-
 ## Project Overview
 
 This project implements a comprehensive risk modeling framework specifically designed for the London specialty insurance market. The framework combines traditional actuarial methods with modern data science techniques to provide accurate risk assessment, pricing, and portfolio optimization.

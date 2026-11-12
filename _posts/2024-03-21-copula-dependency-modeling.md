@@ -7,8 +7,6 @@ tags: [Copulas, Dependency Modeling, Risk Analytics, Python]
 image: /pictures/coding.jpg
 ---
 
-# Copula-Based Dependency Modeling for Insurance Risks
-
 ## Introduction
 
 In insurance risk modeling, understanding and quantifying dependencies between different risks is crucial. Traditional correlation measures often fall short in capturing complex dependencies, especially in the tails of distributions. This is where copulas come into play.

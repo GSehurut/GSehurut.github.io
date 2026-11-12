@@ -7,8 +7,6 @@ tags: [Machine Learning, Insurance, Pricing, Claims, Risk Modeling, Python]
 image: /pictures/coding.jpg
 ---
 
-# Machine Learning Applications in Insurance: From Pricing to Claims
-
 ## Introduction
 
 Machine learning is revolutionizing the insurance industry, enabling more accurate pricing, better risk assessment, and improved customer experience. This article explores key machine learning applications in insurance, from automated pricing models to claims fraud detection.

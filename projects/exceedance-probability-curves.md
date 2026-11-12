@@ -8,8 +8,6 @@ image: /pictures/flowers.jpg
 description: "Implementation of exceedance probability curves for catastrophe risk assessment using Python and historical data."
 ---
 
-# Exceedance Probability Curves for Catastrophe Risk
-
 ## Project Overview
 
 This project implements exceedance probability (EP) curves for catastrophe risk assessment, a crucial tool in understanding and managing catastrophic risks in insurance portfolios. EP curves show the probability that a certain level of loss will be exceeded in a given time period.
