@@ -722,8 +722,12 @@ a:hover {
 .page__header h1 {
   margin-bottom: var(--space-4);
 }
-.page__section + .page__section {
+.page__section + .page__section,
+.grid + .page__section {
   margin-top: var(--space-16);
+}
+.article__header .button-row {
+  margin-block: var(--space-6);
 }
 
 @media (min-width: 768px) {
