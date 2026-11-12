@@ -1,0 +1,14 @@
+<article class="card card--link">
+  <p class="card__meta">
+    {% if include.project.status %}<span class="status-dot" aria-hidden="true"></span>{{ include.project.status }} · {% endif %}{{ include.project.categories | join: " · " }}
+  </p>
+  <h3 class="card__title">
+    <a href="{{ include.project.url }}" class="stretched-link">{{ include.project.title }}</a>
+  </h3>
+  <p>{{ include.project.description }}</p>
+  {% if include.project.tags.size > 0 %}
+  <ul class="chips" aria-label="Technologies">
+    {% for tag in include.project.tags limit: 4 %}<li class="chip">{{ tag }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+</article>
