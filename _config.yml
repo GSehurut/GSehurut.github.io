@@ -27,7 +27,7 @@ defaults:
   - scope:
       path: ""
     values:
-      image: /pictures/Goabaone.jpg
+      image: /pictures/goabaone-headshot.jpg
 
 # Site author information
 author:
