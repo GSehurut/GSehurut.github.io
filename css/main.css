@@ -663,6 +663,52 @@ a:hover {
   background: var(--accent-subtle);
   border-color: transparent;
 }
+.chip--status {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: transparent;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: var(--space-2);
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: 1px;
+}
+
+/* Numbered steps */
+.steps {
+  list-style: none;
+  counter-reset: step;
+  margin: 0 0 var(--space-6);
+  padding: 0;
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+}
+.steps li {
+  counter-increment: step;
+  padding-top: var(--space-4);
+  border-top: 2px solid var(--accent);
+}
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.steps h3 {
+  margin-bottom: var(--space-2);
+}
+.steps p {
+  color: var(--text-muted);
+}
 
 /* ==========================================================================
    Pages

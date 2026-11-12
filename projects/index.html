@@ -1,37 +1,46 @@
 ---
 layout: default
 title: Projects
-description: Projects by Goabaone Sehurutshe in actuarial analytics, risk modelling and data engineering for specialty insurance.
+description: Open source Python projects by Goabaone Sehurutshe for reinsurance simulation, claims reserving and insurance data quality. Contributions welcome.
 ---
-{% assign projects = site.pages | where: "layout", "project" | sort: "date" | reverse %}
+{% assign projects = site.pages | where: "layout", "project" | sort: "order" %}
 
 <div class="wrap page">
   <header class="page__header">
-    <p class="eyebrow">Projects</p>
-    <h1>Modelling &amp; analytics projects</h1>
+    <p class="eyebrow">Open source</p>
+    <h1>Projects</h1>
     <p class="lead">
-      Personal projects exploring risk modelling, catastrophe analytics and
-      insurance data tooling. Work I do at Fidelis is confidential, so these
-      use public or synthetic data.
+      Open source Python tools for actuarial and insurance data work. Each one
+      is MIT licensed, tested, and looking for contributors, whether you're an
+      actuary, a data engineer or a student.
     </p>
   </header>
 
-  <div class="grid grid--2">
+  <div class="grid grid--3">
     {% for project in projects %}
-    <article class="card card--link">
-      {% if project.categories.size > 0 %}
-      <p class="card__meta">{{ project.categories | join: " · " }}</p>
-      {% endif %}
-      <h2 class="card__title">
-        <a href="{{ project.url }}" class="stretched-link">{{ project.title }}</a>
-      </h2>
-      <p>{{ project.description }}</p>
-      {% if project.tags.size > 0 %}
-      <ul class="chips" aria-label="Technologies">
-        {% for tag in project.tags limit: 5 %}<li class="chip">{{ tag }}</li>{% endfor %}
-      </ul>
-      {% endif %}
-    </article>
+    {% include project-card.html project=project %}
     {% endfor %}
   </div>
+
+  <section class="page__section contribute" aria-labelledby="contribute">
+    <h2 id="contribute" class="section__title">How to contribute</h2>
+    <ol class="steps">
+      <li>
+        <h3>Pick a project</h3>
+        <p>Read its README and roadmap to see where it is heading.</p>
+      </li>
+      <li>
+        <h3>Find an issue</h3>
+        <p>Issues labelled <em>good first issue</em> are scoped for newcomers. Comment to claim one.</p>
+      </li>
+      <li>
+        <h3>Open a pull request</h3>
+        <p>Follow the contributing guide. Every PR runs tests and linting automatically.</p>
+      </li>
+    </ol>
+    <p class="muted">
+      Have an idea that isn't on a roadmap? Open an issue on the repository or
+      <a href="/contact/">get in touch</a>.
+    </p>
+  </section>
 </div>

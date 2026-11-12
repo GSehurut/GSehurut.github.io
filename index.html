@@ -73,7 +73,22 @@ description: Goabaone Sehurutshe, Actuarial Analytics Engineer at The Fidelis Pa
   </div>
 </section>
 
-<section class="section section--tint" aria-labelledby="latest-writing">
+<section class="section section--tint" aria-labelledby="open-source">
+  <div class="wrap">
+    <div class="section__head">
+      <h2 id="open-source" class="section__title">Open source</h2>
+      <a href="/projects/" class="text-link">All projects <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+    </div>
+    {% assign projects = site.pages | where: "layout", "project" | sort: "order" %}
+    <div class="grid grid--3">
+      {% for project in projects limit: 3 %}
+      {% include project-card.html project=project %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="latest-writing">
   <div class="wrap">
     <div class="section__head">
       <h2 id="latest-writing" class="section__title">Latest writing</h2>
@@ -87,7 +102,7 @@ description: Goabaone Sehurutshe, Actuarial Analytics Engineer at The Fidelis Pa
   </div>
 </section>
 
-<section class="section" aria-labelledby="contact-cta">
+<section class="section section--tint" aria-labelledby="contact-cta">
   <div class="wrap cta">
     <h2 id="contact-cta" class="section__title">Let's talk</h2>
     <p>

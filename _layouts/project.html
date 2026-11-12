@@ -10,11 +10,21 @@ layout: default
     {% endif %}
     <h1 class="article__title">{{ page.title }}</h1>
     {% if page.description %}<p class="lead">{{ page.description }}</p>{% endif %}
-    {% if page.tags.size > 0 %}
-    <ul class="chips" aria-label="Technologies">
+    {% if page.repo %}
+    <div class="button-row">
+      <a href="https://github.com/{{ page.repo }}" class="button button--primary" rel="noopener">
+        <i class="fab fa-github" aria-hidden="true"></i> View on GitHub
+      </a>
+      <a href="https://github.com/{{ page.repo }}/labels/good%20first%20issue" class="button button--secondary" rel="noopener">
+        Good first issues
+      </a>
+    </div>
+    {% endif %}
+    <ul class="chips" aria-label="Project details">
+      {% if page.status %}<li class="chip chip--status">{{ page.status }}</li>{% endif %}
+      <li class="chip">MIT licence</li>
       {% for tag in page.tags %}<li class="chip">{{ tag }}</li>{% endfor %}
     </ul>
-    {% endif %}
   </header>
 
   <div class="prose">{{ content }}</div>
