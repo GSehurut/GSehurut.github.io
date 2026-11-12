@@ -11,15 +11,15 @@ Personal site of **Goabaone Sehurutshe**, Actuarial Analytics Engineer at The Fi
 | Projects | `projects/slug.md` with `layout: project`, `title`, `date`, `description`, `categories`, `tags` (listed automatically on `/projects/`) |
 | About / Contact | `about/index.html`, `contact.md` |
 | Name, email, social links | `_config.yml` → `author` |
-| Styles | `css/main.css` — design tokens at the top; dark mode via `prefers-color-scheme` |
+| Styles | `css/main.css`: design tokens at the top; dark mode via `prefers-color-scheme` |
 
-The sitemap (`jekyll-sitemap`), RSS feed (`jekyll-feed`) and SEO/Open Graph tags (`jekyll-seo-tag`) are generated at build time.
+The sitemap (`jekyll-sitemap`), RSS feed (`jekyll-feed`) and SEO/Open Graph tags (`jekyll-seo-tag`) are generated at build time. Every push and pull request is built and link-checked by `.github/workflows/build.yml`.
 
 ## Running locally
 
 ```sh
-gem install jekyll jekyll-feed jekyll-seo-tag jekyll-sitemap webrick
-jekyll serve --livereload
+bundle install
+bundle exec jekyll serve --livereload
 # open http://localhost:4000
 ```
 

@@ -1,356 +1,134 @@
 ---
 layout: post
-title: "Monte Carlo Simulation for Loss Modelling in Specialty Insurance"
+title: "Monte Carlo Loss Simulation for Specialty Insurance, From First Principles"
 date: 2024-03-20
+description: "Build a frequency and severity simulation in NumPy, apply an excess of loss layer, read OEP and AEP curves correctly, and know how many simulations you actually need."
 categories: [Actuarial, Risk Modelling]
-tags: [Monte Carlo, Loss Simulation, Specialty Insurance, Python]
-image: /pictures/coding.jpg
+tags: [Monte Carlo, Collective Risk Model, Reinsurance, Python, NumPy]
 ---
 
-## Introduction
+Monte Carlo simulation is the workhorse behind capital models, reinsurance pricing and catastrophe analytics. The idea is simple: if we can describe how many losses happen and how big each one is, we can generate thousands of possible years and read off whatever statistic we need. The details are where most mistakes happen, so this post builds a small but correct simulation and points out the traps along the way.
 
-Monte Carlo simulation is a powerful technique used in actuarial science to model complex risk scenarios, particularly in specialty insurance lines. This post explores how we can implement Monte Carlo simulation to model loss distributions and calculate key risk metrics.
+## The collective risk model
 
-## The Problem
+The standard starting point is the collective risk model. Annual aggregate loss is
 
-In specialty insurance, we often deal with complex risks where traditional analytical methods fall short. Consider a portfolio of marine cargo insurance with the following characteristics:
+**S = X<sub>1</sub> + X<sub>2</sub> + ... + X<sub>N</sub>**
 
-- Multiple perils (storm, collision, fire)
-- Correlated risks
-- Complex policy structures
-- Limited historical data
+where *N* is the number of losses in the year and *X<sub>1</sub>, X<sub>2</sub>, ...* are individual loss sizes, assumed independent of each other and of *N*. This is covered in depth in Klugman, Panjer and Willmot's *Loss Models*, and it is the right mental model even when the production version is far more elaborate.
 
-## Implementation
+Two modelling choices matter most:
 
-Let's walk through a Python implementation of a Monte Carlo simulation for this scenario:
+- **Frequency.** Poisson is the default, but specialty data is usually *overdispersed* (variance greater than mean) because the underlying rate itself varies from year to year. A negative binomial captures that.
+- **Severity.** Large commercial losses are heavy tailed. A lognormal is a reasonable body; a Pareto or generalised Pareto is often better above a threshold.
+
+## A minimal, vectorised simulation
+
+The code below simulates 100,000 years. It avoids a Python loop over years by drawing every loss at once and then summing them back into their years with `np.add.at`.
 
 ```python
 import numpy as np
-import pandas as pd
-from scipy.stats import lognorm, multivariate_normal, poisson
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-class LossSimulator:
-    def __init__(self, n_simulations=10000):
-        self.n_simulations = n_simulations
-        
-    def simulate_losses(self, mean_frequency, std_frequency, 
-                       mean_severity, std_severity, 
-                       correlation_matrix):
-        # Simulate number of claims
-        frequencies = np.random.normal(mean_frequency, std_frequency, self.n_simulations)
-        frequencies = np.maximum(frequencies, 0)  # Ensure non-negative
-        
-        # Simulate claim severities
-        severities = np.random.lognormal(mean_severity, std_severity, self.n_simulations)
-        
-        # Calculate total losses
-        total_losses = frequencies * severities
-        
-        return total_losses
-    
-    def simulate_multiple_perils(self, peril_params):
-        """Simulate losses for multiple perils with correlations"""
-        n_perils = len(peril_params)
-        
-        # Generate correlated frequencies
-        mean_freqs = [params['mean_frequency'] for params in peril_params]
-        cov_matrix = np.array([params['freq_covariance'] for params in peril_params])
-        
-        frequencies = np.random.multivariate_normal(mean_freqs, cov_matrix, self.n_simulations)
-        frequencies = np.maximum(frequencies, 0)
-        
-        # Simulate severities for each peril
-        severities = []
-        for params in peril_params:
-            severity = np.random.lognormal(
-                params['mean_severity'], 
-                params['std_severity'], 
-                self.n_simulations
-            )
-            severities.append(severity)
-        
-        severities = np.array(severities).T
-        
-        # Calculate total losses
-        total_losses = np.sum(frequencies * severities, axis=1)
-        
-        return total_losses, frequencies, severities
-    
-    def calculate_metrics(self, losses):
-        metrics = {
-            'Mean Loss': np.mean(losses),
-            'Standard Deviation': np.std(losses),
-            'VaR 95%': np.percentile(losses, 95),
-            'VaR 99%': np.percentile(losses, 99),
-            'TVaR 95%': np.mean(losses[losses >= np.percentile(losses, 95)]),
-            'TVaR 99%': np.mean(losses[losses >= np.percentile(losses, 99)]),
-            'Skewness': self.calculate_skewness(losses),
-            'Kurtosis': self.calculate_kurtosis(losses)
-        }
-        return metrics
-    
-    def calculate_skewness(self, data):
-        """Calculate skewness of the data"""
-        mean = np.mean(data)
-        std = np.std(data)
-        return np.mean(((data - mean) / std) ** 3)
-    
-    def calculate_kurtosis(self, data):
-        """Calculate kurtosis of the data"""
-        mean = np.mean(data)
-        std = np.std(data)
-        return np.mean(((data - mean) / std) ** 4) - 3
-    
-    def plot_loss_distribution(self, losses, title="Simulated Loss Distribution"):
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
-        
-        # Histogram
-        ax1.hist(losses, bins=50, density=True, alpha=0.7, color='skyblue')
-        ax1.set_title(f'{title} - Histogram')
-        ax1.set_xlabel('Loss Amount')
-        ax1.set_ylabel('Density')
-        ax1.grid(True, alpha=0.3)
-        
-        # Q-Q plot
-        from scipy.stats import probplot
-        probplot(losses, dist="norm", plot=ax2)
-        ax2.set_title(f'{title} - Q-Q Plot')
-        ax2.grid(True, alpha=0.3)
-        
-        plt.tight_layout()
-        plt.show()
-    
-    def stress_test(self, losses, stress_factors):
-        """Perform stress testing on simulated losses"""
-        stressed_losses = {}
-        
-        for scenario, factor in stress_factors.items():
-            stressed_losses[scenario] = losses * factor
-        
-        return stressed_losses
+rng = np.random.default_rng(seed=2024)  # always seed, so results are reproducible
 
-# Example usage
-simulator = LossSimulator(n_simulations=10000)
+n_years = 100_000
 
-# Single peril simulation
-losses = simulator.simulate_losses(
-    mean_frequency=10,
-    std_frequency=2,
-    mean_severity=100000,
-    std_severity=0.5,
-    correlation_matrix=np.array([[1, 0.3], [0.3, 1]])
-)
+# Frequency: negative binomial with mean 12 and variance 24 (overdispersed)
+mean_n, var_n = 12.0, 24.0
+p = mean_n / var_n
+r = mean_n * p / (1 - p)
+counts = rng.negative_binomial(r, p, size=n_years)
 
-metrics = simulator.calculate_metrics(losses)
-print("Risk Metrics:")
-for metric, value in metrics.items():
-    print(f"{metric}: {value:,.2f}")
+# Severity: lognormal body with a mean of about 1m
+mu, sigma = np.log(1_000_000) - 0.5 * 1.2**2, 1.2
+losses = rng.lognormal(mu, sigma, size=counts.sum())
 
-# Multiple perils simulation
-peril_params = [
-    {
-        'mean_frequency': 5,
-        'freq_covariance': [4, 1, 1],
-        'mean_severity': 8,
-        'std_severity': 0.3
-    },
-    {
-        'mean_frequency': 3,
-        'freq_covariance': [1, 9, 1],
-        'mean_severity': 9,
-        'std_severity': 0.4
-    },
-    {
-        'mean_frequency': 2,
-        'freq_covariance': [1, 1, 16],
-        'mean_severity': 10,
-        'std_severity': 0.5
-    }
-]
+# Map every loss back to the year it belongs to
+year_index = np.repeat(np.arange(n_years), counts)
 
-multi_losses, frequencies, severities = simulator.simulate_multiple_perils(peril_params)
-multi_metrics = simulator.calculate_metrics(multi_losses)
-
-print("\nMulti-Peril Risk Metrics:")
-for metric, value in multi_metrics.items():
-    print(f"{metric}: {value:,.2f}")
-
-# Plot results
-simulator.plot_loss_distribution(losses, "Single Peril Losses")
-simulator.plot_loss_distribution(multi_losses, "Multi-Peril Losses")
+# Gross annual aggregate loss
+gross = np.zeros(n_years)
+np.add.at(gross, year_index, losses)
 ```
 
-## Advanced Features
+## Applying an excess of loss layer
 
-### 1. Time-Dependent Simulation
-For long-tail lines, we need to consider time dependencies:
+A per-risk excess of loss layer "5m xs 2m" pays the part of each loss between 2m and 7m. Applying it *per loss before aggregating* is the step people most often get wrong; applying it to the annual total gives an aggregate stop loss instead, which is a different contract.
 
 ```python
-class TimeDependentSimulator(LossSimulator):
-    def __init__(self, n_simulations=10000, time_horizon=10):
-        super().__init__(n_simulations)
-        self.time_horizon = time_horizon
-    
-    def simulate_time_dependent_losses(self, initial_params, trend_params):
-        """Simulate losses with time-dependent parameters"""
-        losses_by_year = []
-        
-        for year in range(self.time_horizon):
-            # Adjust parameters based on trends
-            current_freq = initial_params['mean_frequency'] * (1 + trend_params['freq_trend'] * year)
-            current_severity = initial_params['mean_severity'] * (1 + trend_params['severity_trend'] * year)
-            
-            # Simulate losses for this year
-            year_losses = self.simulate_losses(
-                current_freq, initial_params['std_frequency'],
-                current_severity, initial_params['std_severity'],
-                initial_params['correlation_matrix']
-            )
-            
-            losses_by_year.append(year_losses)
-        
-        return np.array(losses_by_year)
+attachment, limit = 2_000_000, 5_000_000
+
+ceded_per_loss = np.clip(losses - attachment, 0, limit)
+
+ceded = np.zeros(n_years)
+np.add.at(ceded, year_index, ceded_per_loss)
+
+net = gross - ceded
 ```
 
-### 2. Reinsurance Modeling
-Incorporating reinsurance structures:
+If the layer has an annual aggregate limit or reinstatements, apply those to `ceded` per year after this step.
+
+## Reading the results: AEP versus OEP
+
+Two exceedance curves come out of a simulation like this, and they answer different questions:
+
+- **AEP (aggregate exceedance probability):** the probability that *total* annual loss exceeds a level. Relevant for capital and aggregate covers.
+- **OEP (occurrence exceedance probability):** the probability that the *largest single* loss in a year exceeds a level. Relevant for per-occurrence reinsurance.
 
 ```python
-def apply_reinsurance(losses, reinsurance_structure):
-    """Apply reinsurance structure to losses"""
-    retained_losses = np.zeros_like(losses)
-    ceded_losses = np.zeros_like(losses)
-    
-    for i, loss in enumerate(losses):
-        if loss <= reinsurance_structure['retention']:
-            retained_losses[i] = loss
-        else:
-            retained_losses[i] = reinsurance_structure['retention']
-            ceded_losses[i] = loss - reinsurance_structure['retention']
-    
-    return retained_losses, ceded_losses
+# Largest single loss per year (years with no losses have a maximum of 0)
+max_loss = np.zeros(n_years)
+np.maximum.at(max_loss, year_index, losses)
+
+def return_period_loss(annual_values, return_period):
+    """Loss level exceeded on average once every `return_period` years."""
+    return np.quantile(annual_values, 1 - 1 / return_period)
+
+def tvar(annual_values, level):
+    """Average of outcomes beyond the `level` quantile (Tail Value at Risk)."""
+    threshold = np.quantile(annual_values, level)
+    return annual_values[annual_values >= threshold].mean()
+
+for rp in (10, 50, 100, 200):
+    print(
+        f"1-in-{rp:<3}  AEP gross {return_period_loss(gross, rp)/1e6:6.1f}m"
+        f"   OEP gross {return_period_loss(max_loss, rp)/1e6:6.1f}m"
+        f"   AEP net {return_period_loss(net, rp)/1e6:6.1f}m"
+    )
+
+print(f"Average annual loss (gross): {gross.mean()/1e6:.2f}m")
+print(f"99.5% TVaR (net):            {tvar(net, 0.995)/1e6:.2f}m")
 ```
 
-### 3. Scenario Analysis
+The 1 in 200 AEP is the 99.5th percentile of annual loss, which is the confidence level used in Solvency II style capital calculations. TVaR averages the whole tail beyond that point and is a coherent risk measure in the sense of Artzner et al. (1999), which VaR is not.
+
+## How many simulations is enough?
+
+Simulation error is often ignored, but it is easy to estimate. For a mean, the standard error falls with the square root of the number of simulations:
+
 ```python
-def scenario_analysis(simulator, base_params, scenarios):
-    """Perform scenario analysis"""
-    results = {}
-    
-    for scenario_name, scenario_params in scenarios.items():
-        # Adjust base parameters for scenario
-        adjusted_params = {**base_params, **scenario_params}
-        
-        # Simulate losses
-        losses = simulator.simulate_losses(**adjusted_params)
-        
-        # Calculate metrics
-        metrics = simulator.calculate_metrics(losses)
-        results[scenario_name] = metrics
-    
-    return results
+se_aal = gross.std(ddof=1) / np.sqrt(n_years)
+print(f"AAL = {gross.mean()/1e6:.3f}m +/- {1.96*se_aal/1e6:.3f}m (95% interval)")
 ```
 
-## Key Insights
+Tail quantiles converge much more slowly than the mean because only a handful of simulations land beyond them. With 100,000 years, only 500 sit beyond the 1 in 200 point. A quick, honest check is to rerun with several seeds and look at the spread of the quantile you care about. If a 1 in 200 figure moves by more than your materiality threshold between seeds, you need more simulations or a variance reduction technique; Glasserman (2003) covers importance sampling and control variates in detail.
 
-1. **Distribution Fitting**: The choice of distribution for frequency and severity is crucial. In this example, we used:
-   - Normal distribution for frequency (with non-negative constraint)
-   - Lognormal distribution for severity
+## Common pitfalls
 
-2. **Correlation Modeling**: The correlation matrix allows us to capture dependencies between different perils or lines of business.
+- **Not seeding the generator.** Results that change on every run cannot be reviewed or reconciled. Use `np.random.default_rng(seed)` and record the seed.
+- **Using the legacy NumPy API.** `np.random.seed` and global state make parallel runs hard to reproduce. The `Generator` API is the current recommendation in the NumPy documentation.
+- **Applying per-risk terms to aggregates.** As above, this silently changes the contract.
+- **Forgetting dependence.** The collective model assumes independence. Catastrophe events, inflation and the underwriting cycle all create dependence between losses and between lines; the next post on copulas looks at one way to handle that.
+- **Reporting false precision.** If your parameters come from ten years of data, the parameter uncertainty dwarfs the simulation error. Say so.
 
-3. **Risk Metrics**: The simulation provides several important metrics:
-   - Value at Risk (VaR)
-   - Tail Value at Risk (TVaR)
-   - Mean and standard deviation of losses
-   - Skewness and kurtosis
+## Where this goes next
 
-## Practical Applications
+This simple model already supports useful work: comparing reinsurance structures, sizing retentions and explaining tail risk to underwriters. Extensions worth adding, roughly in order of value, are parameter uncertainty (simulate the parameters as well as the losses), inflation and exposure trends, reinstatement terms, and dependence between lines.
 
-This simulation approach can be used for:
+## References
 
-1. **Capital Modeling**: Determining required capital for different risk percentiles
-2. **Pricing**: Understanding the full distribution of potential losses
-3. **Risk Management**: Identifying key drivers of portfolio risk
-4. **Reinsurance Strategy**: Optimizing reinsurance structures based on simulated outcomes
-
-## Model Validation
-
-### 1. Backtesting
-```python
-def backtest_model(historical_data, simulated_data):
-    """Backtest the simulation model"""
-    # Compare key statistics
-    historical_stats = {
-        'mean': np.mean(historical_data),
-        'std': np.std(historical_data),
-        'percentiles': np.percentile(historical_data, [50, 75, 90, 95, 99])
-    }
-    
-    simulated_stats = {
-        'mean': np.mean(simulated_data),
-        'std': np.std(simulated_data),
-        'percentiles': np.percentile(simulated_data, [50, 75, 90, 95, 99])
-    }
-    
-    return historical_stats, simulated_stats
-```
-
-### 2. Sensitivity Analysis
-```python
-def sensitivity_analysis(simulator, base_params, param_ranges):
-    """Perform sensitivity analysis on key parameters"""
-    results = {}
-    
-    for param_name, param_range in param_ranges.items():
-        param_results = []
-        
-        for value in param_range:
-            # Update parameter
-            test_params = base_params.copy()
-            test_params[param_name] = value
-            
-            # Simulate losses
-            losses = simulator.simulate_losses(**test_params)
-            metrics = simulator.calculate_metrics(losses)
-            
-            param_results.append({
-                'value': value,
-                'metrics': metrics
-            })
-        
-        results[param_name] = param_results
-    
-    return results
-```
-
-## Next Steps
-
-Future enhancements could include:
-
-1. Incorporating more complex dependencies using copulas
-2. Adding time-dependent factors for long-tail lines
-3. Implementing machine learning for parameter estimation
-4. Creating interactive dashboards for risk visualization
-
-## Conclusion
-
-Monte Carlo simulation provides a flexible framework for modeling complex insurance risks. By understanding the full distribution of potential outcomes, we can make more informed decisions about capital allocation, pricing, and risk management.
-
-### Key Takeaways
-
-1. **Flexibility**: Monte Carlo simulation can handle complex, non-linear relationships
-2. **Comprehensive Analysis**: Provides full distribution of outcomes, not just point estimates
-3. **Scenario Testing**: Enables testing of various scenarios and stress conditions
-4. **Risk Metrics**: Generates multiple risk metrics for comprehensive analysis
-
-### Best Practices
-
-1. **Model Validation**: Always validate models against historical data
-2. **Sensitivity Analysis**: Understand the impact of parameter uncertainty
-3. **Documentation**: Maintain clear documentation of assumptions and methodology
-4. **Regular Updates**: Update models as new data becomes available
-
-Would you like to explore any specific aspect of this implementation in more detail? Feel free to reach out with questions or suggestions for future topics. 
+- Klugman, S. A., Panjer, H. H. and Willmot, G. E. (2019). *Loss Models: From Data to Decisions*, 5th edition. Wiley.
+- Glasserman, P. (2003). *Monte Carlo Methods in Financial Engineering*. Springer.
+- Artzner, P., Delbaen, F., Eber, J.-M. and Heath, D. (1999). Coherent measures of risk. *Mathematical Finance*, 9(3), 203 to 228.
+- Kaas, R., Goovaerts, M., Dhaene, J. and Denuit, M. (2008). *Modern Actuarial Risk Theory: Using R*, 2nd edition. Springer.
+- NumPy documentation. *Random Generator*. numpy.org/doc/stable/reference/random/generator.html

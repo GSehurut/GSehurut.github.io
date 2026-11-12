@@ -1,489 +1,119 @@
 ---
 layout: post
-title: "Data Engineering Best Practices for Insurance Analytics"
+title: "Data Engineering for Insurance Analytics: Principles That Survive Contact With Bordereaux"
 date: 2024-03-22
-categories: [Data Engineering, Insurance Analytics]
-tags: [Data Engineering, ETL, Data Pipeline, Insurance, Python, SQL]
-image: /pictures/coding.jpg
+description: "Idempotent loads, explicit grain, validation at the boundary, reconciliation and lineage: the data engineering habits that make actuarial and underwriting numbers trustworthy."
+categories: [Data Engineering, Insurance]
+tags: [Data Engineering, ETL, Data Quality, Bordereaux, Python, SQL]
 ---
 
-## Introduction
+Insurance data is rarely "big" in the way web data is big. It is *awkward*. It arrives as spreadsheets from coverholders, as extracts from policy administration systems, as bordereaux in a dozen slightly different layouts, and as manual adjustments that someone made for a good reason three years ago. The hard part is not volume; it is making sure the number an actuary or underwriter sees is right, explainable and reproducible.
 
-Data engineering is the backbone of modern insurance analytics. With the increasing complexity of insurance data and the need for real-time insights, building robust, scalable data pipelines has become essential. This article explores best practices for data engineering in the insurance industry, focusing on ETL processes, data quality, and system architecture.
+These are the principles I have found matter most.
 
-## The Insurance Data Landscape
+## 1. Define the grain before writing any code
 
-Insurance data is inherently complex, characterized by:
+The grain of a table is what one row represents. "One row per policy" sounds clear until you meet layered placements, endorsements, multiple sections, multiple currencies and several participating syndicates on the same risk. Many reporting errors come from joining two tables at different grains and silently duplicating premium.
 
-- **High Volume**: Millions of policies, claims, and transactions
-- **High Variety**: Structured (policies, claims) and unstructured (documents, images)
-- **High Velocity**: Real-time data streams from multiple sources
-- **High Veracity**: Data quality and accuracy requirements
+Write the grain down for every table, for example: *one row per policy section, per layer, per transaction, per currency*. Then enforce it with a uniqueness test on those columns.
 
-## Data Pipeline Architecture
+## 2. Make every load idempotent
 
-### 1. Modern Data Stack
+An idempotent pipeline produces the same result whether it runs once or five times. This matters because pipelines fail halfway, get rerun by hand, and receive corrected files for a period that has already been loaded.
 
-```python
-# Example data pipeline architecture
-class InsuranceDataPipeline:
-    def __init__(self):
-        self.data_sources = {
-            'policy_data': PolicyDatabase(),
-            'claims_data': ClaimsSystem(),
-            'external_data': ExternalAPIs(),
-            'market_data': MarketDataFeed()
-        }
-        
-        self.data_lake = DataLake()
-        self.data_warehouse = DataWarehouse()
-        self.analytics_engine = AnalyticsEngine()
-    
-    def orchestrate_pipeline(self):
-        """Orchestrate the entire data pipeline"""
-        # Extract data from sources
-        raw_data = self.extract_data()
-        
-        # Transform and validate data
-        processed_data = self.transform_data(raw_data)
-        
-        # Load data into storage
-        self.load_data(processed_data)
-        
-        # Generate analytics
-        self.generate_analytics()
-```
+Practical patterns:
 
-### 2. Data Lake vs Data Warehouse
+- Load by **partition** (for example by reporting period and source) and replace the whole partition, rather than appending.
+- Use `MERGE` on a natural key instead of blind inserts.
+- Keep raw files immutable and reprocess from them, so a bug fix can be replayed over history.
+
+## 3. Validate at the boundary
+
+Bad data is cheapest to catch the moment it arrives. A bordereau that is missing its inception dates, or has premium in the wrong currency, should fail loudly before it reaches a dashboard.
+
+A lightweight validation step in pandas goes a long way:
 
 ```python
-class DataLake:
-    def __init__(self, storage_path):
-        self.storage_path = storage_path
-        self.file_formats = ['parquet', 'avro', 'json']
-    
-    def store_raw_data(self, data, source, timestamp):
-        """Store raw data in data lake"""
-        file_path = f"{self.storage_path}/{source}/{timestamp}"
-        
-        # Store in multiple formats for flexibility
-        for format_type in self.file_formats:
-            self._store_in_format(data, file_path, format_type)
-    
-    def _store_in_format(self, data, path, format_type):
-        """Store data in specific format"""
-        if format_type == 'parquet':
-            data.to_parquet(f"{path}.parquet")
-        elif format_type == 'avro':
-            data.to_avro(f"{path}.avro")
-        elif format_type == 'json':
-            data.to_json(f"{path}.json")
+import pandas as pd
 
-class DataWarehouse:
-    def __init__(self, connection_string):
-        self.connection = self._connect(connection_string)
-        self.schema = self._load_schema()
-    
-    def load_processed_data(self, data, table_name):
-        """Load processed data into data warehouse"""
-        # Validate data against schema
-        validated_data = self._validate_data(data, table_name)
-        
-        # Load data with proper indexing
-        self._load_with_indexing(validated_data, table_name)
+REQUIRED = ["policy_ref", "inception_date", "expiry_date", "currency", "gross_premium"]
+VALID_CCY = {"GBP", "USD", "EUR", "CAD", "AUD", "JPY"}
+
+def validate_bordereau(df: pd.DataFrame, source: str) -> pd.DataFrame:
+    errors = []
+
+    missing = [c for c in REQUIRED if c not in df.columns]
+    if missing:
+        raise ValueError(f"{source}: missing columns {missing}")
+
+    if df["policy_ref"].isna().any():
+        errors.append("blank policy_ref")
+
+    dupes = df.duplicated(subset=["policy_ref", "section"], keep=False)
+    if dupes.any():
+        errors.append(f"{dupes.sum()} duplicate policy/section rows")
+
+    bad_dates = df["expiry_date"] <= df["inception_date"]
+    if bad_dates.any():
+        errors.append(f"{bad_dates.sum()} rows with expiry on or before inception")
+
+    bad_ccy = ~df["currency"].isin(VALID_CCY)
+    if bad_ccy.any():
+        errors.append(f"unknown currencies: {sorted(df.loc[bad_ccy, 'currency'].unique())}")
+
+    if errors:
+        raise ValueError(f"{source}: " + "; ".join(errors))
+    return df
 ```
 
-## ETL Best Practices
+Libraries such as pandera or Great Expectations formalise this with declarative schemas and readable reports, and are worth adopting once the number of checks grows. The principle is the same: reject or quarantine bad input with a clear message, never silently coerce it.
 
-### 1. Extract Phase
+For delegated authority business, the Lloyd's Coverholder Reporting Standards define the expected fields for risk and claims bordereaux. Even where a coverholder does not follow them exactly, mapping incoming files to that standard gives you a stable internal shape.
 
-```python
-class DataExtractor:
-    def __init__(self):
-        self.extractors = {
-            'database': DatabaseExtractor(),
-            'api': APIExtractor(),
-            'file': FileExtractor(),
-            'stream': StreamExtractor()
-        }
-    
-    def extract_data(self, source_config):
-        """Extract data from various sources"""
-        extractor_type = source_config['type']
-        extractor = self.extractors[extractor_type]
-        
-        # Add monitoring and logging
-        with self._monitor_extraction(source_config):
-            data = extractor.extract(source_config)
-        
-        return data
-    
-    def _monitor_extraction(self, config):
-        """Monitor extraction process"""
-        start_time = time.time()
-        yield
-        duration = time.time() - start_time
-        
-        # Log extraction metrics
-        self._log_metrics(config['source'], duration, 'extract')
+## 4. Reconcile to something the business trusts
 
-class DatabaseExtractor:
-    def extract(self, config):
-        """Extract data from database"""
-        query = config['query']
-        connection = self._get_connection(config['connection'])
-        
-        # Use incremental extraction for large datasets
-        if config.get('incremental'):
-            return self._incremental_extract(connection, query, config)
-        else:
-            return self._full_extract(connection, query)
-    
-    def _incremental_extract(self, connection, query, config):
-        """Perform incremental extraction"""
-        last_update = self._get_last_update(config['table'])
-        incremental_query = f"{query} WHERE updated_at > '{last_update}'"
-        
-        return pd.read_sql(incremental_query, connection)
-```
+Validation checks that data is internally consistent. Reconciliation checks that it agrees with the outside world. Every important dataset should reconcile to a known control total: written premium to the finance ledger, paid claims to the claims system, policy counts to the underwriting system.
 
-### 2. Transform Phase
+Automate the reconciliation, store the result alongside the data, and show it on the report. A dashboard that says "reconciles to ledger within 0.1%" earns far more trust than one that does not mention it.
 
-```python
-class DataTransformer:
-    def __init__(self):
-        self.transformers = {
-            'clean': DataCleaner(),
-            'validate': DataValidator(),
-            'enrich': DataEnricher(),
-            'aggregate': DataAggregator()
-        }
-    
-    def transform_data(self, data, transformation_config):
-        """Transform data according to configuration"""
-        transformed_data = data.copy()
-        
-        for step in transformation_config['steps']:
-            transformer = self.transformers[step['type']]
-            transformed_data = transformer.transform(transformed_data, step['config'])
-        
-        return transformed_data
+## 5. Keep history explicitly
 
-class DataCleaner:
-    def transform(self, data, config):
-        """Clean and standardize data"""
-        # Handle missing values
-        if config.get('handle_missing'):
-            data = self._handle_missing_values(data, config['missing_strategy'])
-        
-        # Remove duplicates
-        if config.get('remove_duplicates'):
-            data = data.drop_duplicates()
-        
-        # Standardize formats
-        if config.get('standardize_formats'):
-            data = self._standardize_formats(data, config['format_rules'])
-        
-        return data
-    
-    def _handle_missing_values(self, data, strategy):
-        """Handle missing values based on strategy"""
-        if strategy == 'drop':
-            return data.dropna()
-        elif strategy == 'fill':
-            return data.fillna(method='ffill')
-        elif strategy == 'interpolate':
-            return data.interpolate()
-        else:
-            return data
+Actuarial work constantly asks "what did we know at the time?". Reserving uses data as at each quarter end; pricing reviews compare this year's assumptions with last year's. If your tables only hold the current state, those questions become impossible to answer.
 
-class DataValidator:
-    def transform(self, data, config):
-        """Validate data against business rules"""
-        validation_rules = config['rules']
-        validation_results = []
-        
-        for rule in validation_rules:
-            result = self._apply_validation_rule(data, rule)
-            validation_results.append(result)
-        
-        # Log validation results
-        self._log_validation_results(validation_results)
-        
-        # Handle validation failures
-        if any(not result['passed'] for result in validation_results):
-            data = self._handle_validation_failures(data, validation_results)
-        
-        return data
-```
+Two common approaches:
 
-### 3. Load Phase
+- **Snapshots:** store a full copy of key tables at each reporting date. Simple and very easy to query.
+- **Slowly changing dimensions (Type 2):** keep a row per version with `valid_from` and `valid_to` dates. More compact, but queries need care.
 
-```python
-class DataLoader:
-    def __init__(self):
-        self.loaders = {
-            'warehouse': WarehouseLoader(),
-            'lake': LakeLoader(),
-            'cache': CacheLoader()
-        }
-    
-    def load_data(self, data, load_config):
-        """Load data into target systems"""
-        loader_type = load_config['type']
-        loader = self.loaders[loader_type]
-        
-        # Perform load with error handling
-        try:
-            loader.load(data, load_config)
-            self._log_success(load_config)
-        except Exception as e:
-            self._handle_load_error(e, load_config)
-            raise
+The data modelling post goes deeper on this, including the difference between when something happened and when we recorded it.
 
-class WarehouseLoader:
-    def load(self, data, config):
-        """Load data into data warehouse"""
-        table_name = config['table']
-        load_strategy = config.get('strategy', 'append')
-        
-        if load_strategy == 'append':
-            self._append_data(data, table_name)
-        elif load_strategy == 'upsert':
-            self._upsert_data(data, table_name, config['key_columns'])
-        elif load_strategy == 'replace':
-            self._replace_data(data, table_name)
-    
-    def _upsert_data(self, data, table_name, key_columns):
-        """Perform upsert operation"""
-        # Create temporary table
-        temp_table = f"{table_name}_temp"
-        self._create_temp_table(data, temp_table)
-        
-        # Perform upsert
-        upsert_query = self._build_upsert_query(table_name, temp_table, key_columns)
-        self._execute_query(upsert_query)
-        
-        # Clean up
-        self._drop_temp_table(temp_table)
-```
+## 6. Separate business rules from plumbing
 
-## Data Quality Management
+Rules such as "how to convert to settlement currency", "which rate of exchange to use" or "how to allocate premium across sections" should live in one well tested place, not be repeated in five SQL scripts and three notebooks. Put them in pure functions or in a single curated layer, write unit tests for them, and have everything else call that.
 
-### 1. Data Quality Framework
+## 7. Make lineage visible
 
-```python
-class DataQualityManager:
-    def __init__(self):
-        self.quality_checks = {
-            'completeness': CompletenessChecker(),
-            'accuracy': AccuracyChecker(),
-            'consistency': ConsistencyChecker(),
-            'timeliness': TimelinessChecker()
-        }
-    
-    def assess_quality(self, data, quality_config):
-        """Assess data quality"""
-        quality_scores = {}
-        
-        for check_type, checker in self.quality_checks.items():
-            if check_type in quality_config:
-                score = checker.check(data, quality_config[check_type])
-                quality_scores[check_type] = score
-        
-        return quality_scores
+When an underwriter asks why a number changed, you need to be able to trace it back: which file, which load, which version of the transformation. At minimum, stamp every row with the source file, the load timestamp and the pipeline version. Platform tools can add richer lineage on top, but these three columns answer most questions.
 
-class CompletenessChecker:
-    def check(self, data, config):
-        """Check data completeness"""
-        required_columns = config.get('required_columns', [])
-        completeness_scores = {}
-        
-        for column in required_columns:
-            if column in data.columns:
-                completeness = 1 - (data[column].isnull().sum() / len(data))
-                completeness_scores[column] = completeness
-            else:
-                completeness_scores[column] = 0
-        
-        return completeness_scores
-```
+## 8. Treat pipelines as software
 
-### 2. Data Lineage
+Version control, code review, automated tests and CI/CD are not just for application developers. A pricing dataset that feeds underwriting decisions deserves the same discipline as a production web service. Reis and Housley (2022) describe this as treating data as a product with owners, contracts and service levels, which is a useful framing for actuarial data.
 
-```python
-class DataLineageTracker:
-    def __init__(self):
-        self.lineage_graph = {}
-    
-    def track_lineage(self, source_data, target_data, transformation):
-        """Track data lineage"""
-        lineage_record = {
-            'source': source_data,
-            'target': target_data,
-            'transformation': transformation,
-            'timestamp': datetime.now(),
-            'version': self._get_version()
-        }
-        
-        self.lineage_graph[target_data] = lineage_record
-    
-    def get_lineage(self, data_id):
-        """Get lineage for specific data"""
-        return self.lineage_graph.get(data_id, {})
-```
+## A short checklist
 
-## Performance Optimization
+- [ ] Grain written down and enforced with a uniqueness test
+- [ ] Loads are idempotent and can be rerun safely
+- [ ] Inputs validated with clear, actionable error messages
+- [ ] Outputs reconciled to a trusted control total
+- [ ] History kept so "as at" questions can be answered
+- [ ] Business rules in one tested place
+- [ ] Source, load time and version recorded on every row
+- [ ] Code reviewed, tested and deployed through CI
 
-### 1. Parallel Processing
+## References
 
-```python
-class ParallelProcessor:
-    def __init__(self, max_workers=4):
-        self.max_workers = max_workers
-        self.executor = ThreadPoolExecutor(max_workers=max_workers)
-    
-    def process_parallel(self, data_chunks, processor_func):
-        """Process data chunks in parallel"""
-        futures = []
-        
-        for chunk in data_chunks:
-            future = self.executor.submit(processor_func, chunk)
-            futures.append(future)
-        
-        results = []
-        for future in as_completed(futures):
-            result = future.result()
-            results.append(result)
-        
-        return results
-```
-
-### 2. Caching Strategy
-
-```python
-class DataCache:
-    def __init__(self, cache_config):
-        self.cache = Redis(host=cache_config['host'], port=cache_config['port'])
-        self.ttl = cache_config.get('ttl', 3600)
-    
-    def get_cached_data(self, key):
-        """Get data from cache"""
-        cached_data = self.cache.get(key)
-        if cached_data:
-            return pickle.loads(cached_data)
-        return None
-    
-    def cache_data(self, key, data):
-        """Cache data with TTL"""
-        serialized_data = pickle.dumps(data)
-        self.cache.setex(key, self.ttl, serialized_data)
-```
-
-## Monitoring and Alerting
-
-### 1. Pipeline Monitoring
-
-```python
-class PipelineMonitor:
-    def __init__(self):
-        self.metrics = {}
-        self.alerts = []
-    
-    def monitor_pipeline(self, pipeline_config):
-        """Monitor pipeline execution"""
-        start_time = time.time()
-        
-        try:
-            # Execute pipeline
-            result = self._execute_pipeline(pipeline_config)
-            
-            # Record metrics
-            duration = time.time() - start_time
-            self._record_metrics(pipeline_config['name'], duration, 'success')
-            
-            return result
-        
-        except Exception as e:
-            # Record failure
-            duration = time.time() - start_time
-            self._record_metrics(pipeline_config['name'], duration, 'failure')
-            self._send_alert(e, pipeline_config)
-            raise
-    
-    def _send_alert(self, error, config):
-        """Send alert on pipeline failure"""
-        alert = {
-            'pipeline': config['name'],
-            'error': str(error),
-            'timestamp': datetime.now(),
-            'severity': 'high'
-        }
-        
-        self.alerts.append(alert)
-        # Send notification (email, Slack, etc.)
-        self._notify(alert)
-```
-
-## Security and Compliance
-
-### 1. Data Encryption
-
-```python
-class DataEncryption:
-    def __init__(self, encryption_key):
-        self.encryption_key = encryption_key
-    
-    def encrypt_data(self, data):
-        """Encrypt sensitive data"""
-        if isinstance(data, pd.DataFrame):
-            return self._encrypt_dataframe(data)
-        else:
-            return self._encrypt_object(data)
-    
-    def _encrypt_dataframe(self, df):
-        """Encrypt DataFrame columns"""
-        encrypted_df = df.copy()
-        
-        for column in df.columns:
-            if self._is_sensitive_column(column):
-                encrypted_df[column] = df[column].apply(self._encrypt_value)
-        
-        return encrypted_df
-```
-
-### 2. Access Control
-
-```python
-class AccessController:
-    def __init__(self):
-        self.permissions = self._load_permissions()
-    
-    def check_access(self, user, resource, action):
-        """Check user access to resource"""
-        user_permissions = self.permissions.get(user, {})
-        resource_permissions = user_permissions.get(resource, [])
-        
-        return action in resource_permissions
-```
-
-## Conclusion
-
-Data engineering in insurance requires a comprehensive approach that addresses the unique challenges of the industry. By implementing these best practices, organizations can build robust, scalable, and secure data pipelines that support advanced analytics and decision-making.
-
-### Key Takeaways
-
-1. **Architecture First**: Design scalable, modular data architecture
-2. **Quality Matters**: Implement comprehensive data quality checks
-3. **Monitor Everything**: Build monitoring and alerting systems
-4. **Security by Design**: Embed security and compliance from the start
-5. **Performance Optimization**: Use parallel processing and caching strategies
-
-### Future Trends
-
-1. **Real-time Processing**: Stream processing for real-time analytics
-2. **AI/ML Integration**: Automated data quality and pipeline optimization
-3. **Cloud-native**: Serverless and containerized data pipelines
-4. **Data Mesh**: Distributed data architecture for large organizations
-
-Would you like to explore any specific aspect of data engineering in more detail? Feel free to reach out with questions or suggestions for future topics. 
+- Reis, J. and Housley, M. (2022). *Fundamentals of Data Engineering*. O'Reilly Media.
+- Kleppmann, M. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.
+- Kimball, R. and Ross, M. (2013). *The Data Warehouse Toolkit*, 3rd edition. Wiley.
+- Lloyd's. *Coverholder Reporting Standards*. Lloyd's of London.
+- pandera documentation. pandera.readthedocs.io

@@ -21,7 +21,6 @@ exclude:
   - .vscode/
   - README.md
   - SEO-GUIDE.md
-  - gitignore
 
 defaults:
   - scope:

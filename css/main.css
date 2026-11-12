@@ -2,7 +2,7 @@
    Design tokens
    ========================================================================== */
 :root {
-  /* Colour — neutrals carry the page; one accent (a nod to Botswana blue) */
+  /* Colour: neutrals carry the page; one accent (a nod to Botswana blue) */
   --bg: #ffffff;
   --surface: #f5f7fa;
   --surface-raised: #ffffff;
@@ -338,7 +338,7 @@ a:hover {
   cursor: pointer;
 }
 
-/* Collapsible menu on small screens — only when JS is available */
+/* Collapsible menu on small screens, only when JS is available */
 @media (max-width: 720px) {
   .brand__name {
     font-size: var(--text-sm);
